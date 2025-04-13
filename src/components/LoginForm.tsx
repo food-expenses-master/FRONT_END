@@ -4,6 +4,7 @@ import { useState } from "react";
 import { login } from "@/lib/auth";
 import { setSessionCookie } from "@/lib/setSession";
 import { useRouter } from "next/navigation";
+import GoogleLoginButton from "./GoogleLoginButton";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
@@ -23,6 +24,7 @@ export default function LoginForm() {
   };
 
   return (
+    <div className="flex">
     <form onSubmit={handleLogin} className="space-y-4 p-4 max-w-sm mx-auto">
       <h2 className="text-xl font-semibold">로그인</h2>
       <input
@@ -32,7 +34,7 @@ export default function LoginForm() {
         onChange={(e) => setEmail(e.target.value)}
         className="w-full border p-2 rounded"
         required
-      />
+        />
       <input
         type="password"
         placeholder="비밀번호"
@@ -40,14 +42,16 @@ export default function LoginForm() {
         onChange={(e) => setPassword(e.target.value)}
         className="w-full border p-2 rounded"
         required
-      />
+        />
       {error && <p className="text-red-500 text-sm">{error}</p>}
       <button
         type="submit"
         className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
-      >
+        >
         로그인
       </button>
     </form>
+    <GoogleLoginButton/>
+    </div>
   );
 }
