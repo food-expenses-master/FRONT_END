@@ -33,13 +33,7 @@ export type KamisPriceData = {
   dpr7: string;
 };
 
-interface PageProps {
-  searchParams?: {
-    category?: string;
-  };
-}
-
-export default async function HomePage({ searchParams }: PageProps) {
+export default async function HomePage({ searchParams }: any) {
   const category = searchParams?.category ?? '400';
   const kamisData = await fetchKamisDailyPrice(category);
   const priceItems: KamisPriceData[] = kamisData.data.item
