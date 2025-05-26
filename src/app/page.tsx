@@ -1,4 +1,6 @@
 import { fetchKamisDailyPrice } from "@/lib/fetchKamis";
+import BottomNav from "./_components/BottomNav";
+import CategorySelector from "./_components/CategorySelector";
 
 export type KamisPriceData = {
   item_name: string;        // 품목명 예: '녹두'
@@ -31,31 +33,53 @@ export type KamisPriceData = {
   dpr7: string;
 };
 
-export default async function HomePage({}) {
-  const kamisData = await fetchKamisDailyPrice();
+export default async function HomePage({ searchParams }: { searchParams: { category?: string } }) {
+  const category = searchParams.category ?? '400';
+  const kamisData = await fetchKamisDailyPrice(category);
   const priceItems: KamisPriceData[] = kamisData.data.item
-  console.log(kamisData.data.item);
   
   return (
     <div className="bg-white">
       {/* <KamisClientView kamisData={kamisData}/> */}
-          <div className="space-y-4">
+      <CategorySelector/>
+        <div className="w-full max-w-[425px] mx-auto px-4 overflow-y-scroll pb-[100px]">
+              <div className="w-full max-w-[425px] mx-auto px-4 py-3 flex justify-between items-center text-sm">
+      {/* 왼쪽: 전체 개수 */}
+      <div className="text-gray-400">
+        전체 <span className="text-gray-600 font-medium">{priceItems.length}</span>
+      </div>
+
+      {/* 오른쪽: 정렬 기준 */}
+      <div className="flex items-center text-gray-800 font-medium space-x-1">
+        <span>순</span>
+        <span className="text-gray-400 text-[16px] leading-none">≡</span>
+      </div>
+    </div>
  {priceItems.map((item, idx) => {
         // 가격 비교용 기준 설정
-        const base1 = parsePrice(item.dpr1) ?? parsePrice(item.dpr2);
-        const base2 =
-          parsePrice(item.dpr1) !== null
-            ? parsePrice(item.dpr2)
-            : parsePrice(item.dpr3);
+    const prices: { label: string; value: number | null }[] = [
+            { label: item.day1, value: parsePrice(item.dpr1) },
+            { label: item.day2, value: parsePrice(item.dpr2) },
+            { label: item.day3, value: parsePrice(item.dpr3) },
+          ];
 
-        const diff = base1 !== null && base2 !== null ? base1 - base2 : null;
-        const rate =
-          base1 !== null && base2 !== null
-            ? ((base1 - base2) / base2) * 100
-            : null;
+          // 유효한 숫자 가격만 추출
+          const validPrices = prices.filter((p) => p.value !== null);
 
-        const isUp = diff !== null && diff > 0;
-        const isDown = diff !== null && diff < 0;
+          // 최근 2개 값으로 비교
+          const [recent, prev] = validPrices;
+
+          const diff =
+            recent && prev ? (recent.value as number) - (prev.value as number) : null;
+
+          const rate =
+            recent && prev && prev.value
+              ? ((recent.value! - prev.value!) / prev.value!) * 100
+              : null;
+
+          const isUp = diff !== null && diff > 0;
+          const isDown = diff !== null && diff < 0;
+
 
         const rateText =
           rate !== null
@@ -68,7 +92,7 @@ export default async function HomePage({}) {
           item.dpr1 && item.dpr1 !== '-' ? item.dpr1 : item.dpr2 ?? '-';
 
         return (
-          <div key={idx} className="flex items-center justify-between py-4 px-2">
+          <div key={idx} className="flex items-center justify-between py-4 px-2 ">
             {/* 좌측 */}
             <div className="flex items-center space-x-3">
               <input type="checkbox" className="w-4 h-4 accent-gray-400" />
@@ -103,6 +127,7 @@ export default async function HomePage({}) {
         );
       })}
     </div>
+    <BottomNav/>
     </div>
   );
 }

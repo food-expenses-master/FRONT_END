@@ -1,6 +1,8 @@
-export async function fetchKamisDailyPrice() {
+export async function fetchKamisDailyPrice(category?: string) {
   const certKey = process.env.KAMIS_CERT_KEY;
   const certId = process.env.KAMIS_CERT_ID;
+
+  const today = new Date().toISOString().slice(0, 10);
 
   const url = `http://www.kamis.or.kr/service/price/xml.do` +
               `?action=dailyPriceByCategoryList` +
@@ -8,10 +10,9 @@ export async function fetchKamisDailyPrice() {
               `&p_cert_key=${certKey}` +
               `&p_cert_id=${certId}` +
               `&p_product_cls_code=02` +
-              `&p_category_code=100` +
-              `&p_item_code=${"100"}` +
-              `&p_regday=${"2025-05-27"}` +
-              `&p_convert_kg_yn=N`;
+              `&p_item_category_code=${category}` +
+              `&p_regday=${today}` +
+              `&p_convert_kg_yn=Y`;
 
   try {
     const response = await fetch(url, {

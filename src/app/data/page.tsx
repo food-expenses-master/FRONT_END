@@ -1,4 +1,5 @@
 import { fetchKamisDailyPrice } from "@/lib/fetchKamis";
+import CategorySelector from "../_components/CategorySelector";
 
 export type KamisPriceData = {
   item_name: string;        // 품목명 예: '녹두'
@@ -31,12 +32,14 @@ export type KamisPriceData = {
   dpr7: string;
 };
 
-export default async function HomePage({}) {
-  const kamisData = await fetchKamisDailyPrice();
+export default async function HomePage({ searchParams }: { searchParams: { category?: string } }) {
+      const category = searchParams.category ?? '400';
+  const kamisData = await fetchKamisDailyPrice(category);
   const dataList: KamisPriceData[] = kamisData.data.item
 
   return (
     <>
+          <CategorySelector/>
       <div className=" w-full">
         {
         dataList.map((item, index) => (
