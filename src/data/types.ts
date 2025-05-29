@@ -1,0 +1,23 @@
+export type KamisPriceData = {
+  item_name: string;
+  item_code: string;
+  kind_name: string;
+  kind_code: string;
+  rank: string;
+  rank_code: string;
+  unit: string;
+  day1: string;
+  dpr1: string;
+  day2: string;
+  dpr2: string;
+  day3: string;
+  dpr3: string;
+  day4: string;
+  dpr4: string;
+  day5: string;
+  dpr5: string;
+  day6: string;
+  dpr6: string;
+  day7: string;
+  dpr7: string;
+};

@@ -12,7 +12,8 @@ export async function fetchKamisDailyPrice(category?: string) {
               `&p_product_cls_code=02` +
               `&p_item_category_code=${category}` +
               `&p_regday=${today}` +
-              `&p_convert_kg_yn=Y`;
+              `&p_convert_kg_yn=Y` +
+              `&p_rank_code=03`; //상품
 
   try {
     const response = await fetch(url, {
