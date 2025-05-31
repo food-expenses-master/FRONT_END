@@ -5,7 +5,7 @@ import { useState } from 'react'
 import CategorySelector from './CategorySelector'
 import SortSelector from './SortSelector'
 import { getDisplayName } from '@/data/utils'
-import FilterBottomSheet, { FilterOption } from './FilterBottomSheet'
+import FilterBottomSheet from './FilterBottomSheet'
 import FilterSelectTrigger from './FilterSelectTrigger'
 import SearchBar from './SearchBar'
 import { useScrollInfo } from '@/hooks/useScrollInfo'
@@ -16,7 +16,6 @@ type Props = {
 
 export default function MainPageClient({ data }: Props) {
   const { scrollY, direction } = useScrollInfo()
-  const show = scrollY > 150 && direction === 'up'
   const isTabVisible = scrollY > 150 && direction === 'up'
 
   const [sortKey, setSortKey] = useState('price_asc')

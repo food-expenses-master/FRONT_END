@@ -1,12 +1,14 @@
-import Header from "./_components/Header";
+import Header from './_components/Header'
+import HomePageClientComponent from './_components/HomePageClientComponent'
 
 export default function HomePage() {
   return (
-    <main >
-       <Header title={"홈"}/>
-      <p className="text-gray-600 text-sm">
+    <main>
+      <Header title={'홈'} />
+      <p className="text-gray-600 text-sm pb-60">
         환영합니다! 식비마스터에 잘 오셨어요.
       </p>
+      <HomePageClientComponent />
     </main>
-  );
+  )
 }

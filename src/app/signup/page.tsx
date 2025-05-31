@@ -17,10 +17,11 @@ export default function SignupPage() {
     setError('')
 
     try {
-    const user = await signup(email, password)
-    console.log('회원가입 성공:', user)
+      const user = await signup(email, password)
+      console.log('회원가입 성공:', user)
+      router.push('/login')
     } catch (err: any) {
-    console.error('회원가입 실패:', err.message)
+      console.error('회원가입 실패:', err.message)
     }
   }
 
@@ -32,7 +33,7 @@ export default function SignupPage() {
           type="email"
           placeholder="이메일"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={e => setEmail(e.target.value)}
           className="w-full border p-2 rounded"
           required
         />
@@ -40,7 +41,7 @@ export default function SignupPage() {
           type="password"
           placeholder="비밀번호"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={e => setPassword(e.target.value)}
           className="w-full border p-2 rounded"
           required
         />
