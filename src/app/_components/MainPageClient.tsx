@@ -36,18 +36,8 @@ export default function MainPageClient({ data }: Props) {
 );
 
   return (
-    <div className="bg-white">
-      <div className="w-full max-w-[425px] mx-auto px-4 overflow-y-scroll pb-[100px]">
-            <div className="flex items-end justify-between px-4 pt-6 pb-6">
-      <div className="flex items-baseline gap-2">
-        <h1 className="text-xl font-extrabold text-gray-900 leading-none">
-          {"재료 시세"}
-        </h1>
-        {/* <span className="text-sm text-gray-400 leading-none">{''} 기준</span> */}
-      </div>
-    </div>
-
-
+      <div className="pb-[100px]">
+      
 <SearchBar data={data} onQueryChange={setQuery} />
       <CategorySelector />
 
@@ -124,8 +114,6 @@ export default function MainPageClient({ data }: Props) {
           );
         })}
       </div>
-      <BottomNav />
-    </div>
   );
 }
 

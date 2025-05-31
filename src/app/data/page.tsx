@@ -1,5 +1,6 @@
 import { fetchKamisDailyPrice } from "@/lib/fetchKamis";
 import MainPageClient from "../_components/MainPageClient";
+import Header from "../_components/Header";
 
 export default async function Page({ searchParams }: { searchParams: any}) {
   const category = searchParams?.category ?? '400';
@@ -8,5 +9,10 @@ export default async function Page({ searchParams }: { searchParams: any}) {
 
   console.log(kamisData);
 
-  return <MainPageClient data={kamisData?.data?.item ?? []} />;
+  return (
+      <>
+     <Header title={"재료 시세"}/>
+  <MainPageClient data={kamisData?.data?.item ?? []} />;
+  </>
+    )
 }

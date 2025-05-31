@@ -28,7 +28,7 @@ export default function BottomNav() {
               className="flex flex-col items-center justify-center text-center flex-1"
             >
               <div className={isActive ? 'text-black' : 'text-gray-400'}>
-                <Icon size={22} />
+                <Icon size={22}  className="transition-nav transition-nav-fast ease-nav-ease transform hover:scale-110" />
               </div>
               <span
                 className={`mt-1 ${
