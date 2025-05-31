@@ -18,7 +18,7 @@ export async function fetchKamisDailyPrice(category?: string, region?: string) {
 
   try {
     const response = await fetch(url, {
-      cache: 'no-store',
+       next: { revalidate: 3600 },
     });
 
     const data = await response.json();

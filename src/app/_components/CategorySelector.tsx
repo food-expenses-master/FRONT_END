@@ -21,7 +21,7 @@ export default function CategorySelector() {
   };
 
   return (
-    <div className="w-full max-w-[425px] mx-auto px-4 overflow-x-auto">
+    <div className="w-full max-w-[425px] mx-auto overflow-x-auto">
       <div className="flex space-x-4 py-2">
     {categories.map((cat) => {
           const isActive = cat.code === currentCategory;

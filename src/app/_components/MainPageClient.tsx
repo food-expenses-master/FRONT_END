@@ -30,7 +30,10 @@ export default function MainPageClient({ data }: Props) {
   const sorted = sortData(
     data.filter((item) => item.rank !== '중품'),
     sortKey
-  );
+  ).filter(
+  (item) =>
+    `${item.item_name} ${item.kind_name}`.toLowerCase().includes(query.trim().toLowerCase())
+);
 
   return (
     <div className="bg-white">
@@ -45,10 +48,10 @@ export default function MainPageClient({ data }: Props) {
     </div>
 
 
-<SearchBar value={query} onChange={setQuery} />
+<SearchBar data={data} onQueryChange={setQuery} />
       <CategorySelector />
 
-<div className="flex gap-2 px-4 py-2 border-t">
+<div className="flex gap-2 py-2 border-t">
   <FilterSelectTrigger label={regionLabel} onClick={() => setShowFilter(true)} />
   <FilterSelectTrigger label={sellerLabel} onClick={() => setShowFilter(true)} />
 </div>
@@ -65,8 +68,7 @@ export default function MainPageClient({ data }: Props) {
         setSelectedSeller={setSeller}
       />
 
-
-        <div className="w-full max-w-[425px] mx-auto px-4 py-3 flex justify-between items-center text-sm">
+        <div className="w-full max-w-[425px] mx-auto py-3 flex justify-between items-center text-sm">
           <div className="text-gray-400">
             전체 <span className="text-gray-600 font-medium">{sorted.length}</span>
           </div>
