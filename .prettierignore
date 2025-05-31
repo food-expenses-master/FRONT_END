@@ -1,0 +1,7 @@
+#package build
+build
+dist
+tests
+*.md
+*.ejs
+.prettierrc

@@ -1,50 +1,62 @@
-'use client';
+'use client'
 
-import { KamisPriceData, regionOptions, sellerOptions } from '@/data/types';
-import { useState } from 'react';
-import CategorySelector from './CategorySelector';
-import SortSelector from './SortSelector';
-import { getDisplayName } from '@/data/utils';
-import BottomNav from './BottomNav';
-import FilterBottomSheet, { FilterOption } from './FilterBottomSheet';
-import FilterSelectTrigger from './FilterSelectTrigger';
-import SearchBar from './SearchBar';
-
+import { KamisPriceData, regionOptions, sellerOptions } from '@/data/types'
+import { useState } from 'react'
+import CategorySelector from './CategorySelector'
+import SortSelector from './SortSelector'
+import { getDisplayName } from '@/data/utils'
+import FilterBottomSheet, { FilterOption } from './FilterBottomSheet'
+import FilterSelectTrigger from './FilterSelectTrigger'
+import SearchBar from './SearchBar'
+import { useScrollInfo } from '@/hooks/useScrollInfo'
 
 type Props = {
-  data: KamisPriceData[];
-};
+  data: KamisPriceData[]
+}
 
 export default function MainPageClient({ data }: Props) {
-  const [sortKey, setSortKey] = useState('price_asc');
-  const [query, setQuery] = useState('');
+  const { scrollY, direction } = useScrollInfo()
+  const show = scrollY > 150 && direction === 'up'
+  const isTabVisible = scrollY > 150 && direction === 'up'
 
-  const [showFilter, setShowFilter] = useState(false);
+  const [sortKey, setSortKey] = useState('price_asc')
+  const [query, setQuery] = useState('')
 
-  const [region, setRegion] = useState<string | null>(null);
-  const [seller, setSeller] = useState<string | null>(null);
+  const [showFilter, setShowFilter] = useState(false)
 
-  const regionLabel = regionOptions.find((r) => r.id === region)?.label ?? '지역';
-  const sellerLabel = sellerOptions.find((s) => s.id === seller)?.label ?? '판매처';
+  const [region, setRegion] = useState<string | null>(null)
+  const [seller, setSeller] = useState<string | null>(null)
+
+  const regionLabel = regionOptions.find(r => r.id === region)?.label ?? '지역'
+  const sellerLabel =
+    sellerOptions.find(s => s.id === seller)?.label ?? '판매처'
 
   const sorted = sortData(
-    data.filter((item) => item.rank !== '중품'),
+    data.filter(item => item.rank !== '중품'),
     sortKey
-  ).filter(
-  (item) =>
-    `${item.item_name} ${item.kind_name}`.toLowerCase().includes(query.trim().toLowerCase())
-);
+  ).filter(item =>
+    `${item.item_name} ${item.kind_name}`
+      .toLowerCase()
+      .includes(query.trim().toLowerCase())
+  )
 
   return (
-      <div className="pb-[100px]">
-      
-<SearchBar data={data} onQueryChange={setQuery} />
+    <div className="pb-[100px]">
+      <SearchBar data={data} onQueryChange={setQuery} />
       <CategorySelector />
 
-<div className="flex gap-2 py-2 border-t">
-  <FilterSelectTrigger label={regionLabel} onClick={() => setShowFilter(true)} />
-  <FilterSelectTrigger label={sellerLabel} onClick={() => setShowFilter(true)} />
-</div>
+      <div className="flex gap-2 py-2 border-t border-[#F3F4F8]">
+        <FilterSelectTrigger
+          label={regionLabel}
+          active={regionLabel !== '지역'}
+          onClick={() => setShowFilter(true)}
+        />
+        <FilterSelectTrigger
+          label={sellerLabel}
+          active={sellerLabel !== '판매처'}
+          onClick={() => setShowFilter(true)}
+        />
+      </div>
 
       {/* 바텀시트 필터 */}
       <FilterBottomSheet
@@ -58,99 +70,121 @@ export default function MainPageClient({ data }: Props) {
         setSelectedSeller={setSeller}
       />
 
-        <div className="w-full max-w-[425px] mx-auto py-3 flex justify-between items-center text-sm">
-          <div className="text-gray-400">
-            전체 <span className="text-gray-600 font-medium">{sorted.length}</span>
-          </div>
-          <div className="flex items-center text-gray-800 font-medium space-x-1">
-            <SortSelector onChange={setSortKey} />
-          </div>
+      <div
+        className={`
+          flex justify-between items-center
+        sticky z-30 bg-white transition-[top] duration-200
+      `}
+        style={{
+          top: isTabVisible ? 156 : 60, // 헤더:60 + 탭:40px 고려
+        }}
+      >
+        <div className="text-gray-400">
+          전체{' '}
+          <span className="text-gray-600 font-medium">{sorted.length}</span>
         </div>
+        <div className="flex items-center text-gray-800 font-medium space-x-1">
+          <SortSelector onChange={setSortKey} />
+        </div>
+      </div>
 
+      {sorted.map((item, idx) => {
+        const displayPrice = item.dpr1 !== '-' ? item.dpr1 : item.dpr2 ?? '-'
 
+        const [recent, prev] = [item.dpr1, item.dpr2]
+          .map(parsePrice)
+          .filter((n): n is number => n !== null)
 
-        {sorted.map((item, idx) => {
-          const displayPrice = item.dpr1 !== '-' ? item.dpr1 : item.dpr2 ?? '-';
+        const rate =
+          recent !== undefined && prev !== undefined && prev !== 0
+            ? ((recent - prev) / prev) * 100
+            : null
 
-          const [recent, prev] = [item.dpr1, item.dpr2]
-            .map(parsePrice)
-            .filter((n): n is number => n !== null);
+        const isUp = rate !== null && rate > 0
+        const isDown = rate !== null && rate < 0
+        const rateText =
+          rate !== null
+            ? `${isUp ? '+' : isDown ? '-' : ''}${Math.abs(rate).toFixed(2)}%`
+            : '-'
+        const icon = isUp ? '▲' : isDown ? '▼' : ''
 
-          const rate =
-            recent !== undefined && prev !== undefined && prev !== 0
-              ? ((recent - prev) / prev) * 100
-              : null;
-
-          const isUp = rate !== null && rate > 0;
-          const isDown = rate !== null && rate < 0;
-          const rateText =
-            rate !== null
-              ? `${isUp ? '+' : isDown ? '-' : ''}${Math.abs(rate).toFixed(2)}%`
-              : '-';
-          const icon = isUp ? '▲' : isDown ? '▼' : '';
-
-          return (
-            <div key={idx} className="flex items-center justify-between py-4 px-2">
-              <div className="flex items-center space-x-3">
-                <input type="checkbox" className="w-4 h-4 accent-gray-400" />
-                <div>
-                  <div className="text-[15px] font-semibold text-gray-900">
-                    {getDisplayName(item.item_name, item.kind_name)}
-                  </div>
-                  <div className="text-[13px] text-gray-400">유통업체 · 상품 · 1kg</div>
+        return (
+          <div
+            key={idx}
+            className="flex items-center justify-between py-4 px-2"
+          >
+            <div className="flex items-center space-x-3">
+              <input type="checkbox" className="w-4 h-4 accent-gray-400" />
+              <div>
+                <div className="text-[15px] font-semibold text-gray-900">
+                  {getDisplayName(item.item_name, item.kind_name)}
                 </div>
-              </div>
-              <div className="text-right">
-                <div className="text-[15px] font-semibold text-gray-900">{displayPrice}원</div>
-                <div
-                  className={`text-[13px] font-medium ${
-                    isUp ? 'text-red-500' : isDown ? 'text-blue-600' : 'text-gray-400'
-                  }`}
-                >
-                  {rateText} {icon}
+                <div className="text-[13px] text-gray-400">
+                  유통업체 · 상품 · 1kg
                 </div>
               </div>
             </div>
-          );
-        })}
-      </div>
-  );
+            <div className="text-right">
+              <div className="text-[15px] font-semibold text-gray-900">
+                {displayPrice}원
+              </div>
+              <div
+                className={`text-[13px] font-medium ${
+                  isUp
+                    ? 'text-red-500'
+                    : isDown
+                    ? 'text-blue-600'
+                    : 'text-gray-400'
+                }`}
+              >
+                {rateText} {icon}
+              </div>
+            </div>
+          </div>
+        )
+      })}
+    </div>
+  )
 }
 
 function parsePrice(value: string): number | null {
-  if (!value || value === '-' || isNaN(Number(value.replace(/,/g, '')))) return null;
-  return parseInt(value.replace(/,/g, ''), 10);
+  if (!value || value === '-' || isNaN(Number(value.replace(/,/g, ''))))
+    return null
+  return parseInt(value.replace(/,/g, ''), 10)
 }
 
 function sortData(data: KamisPriceData[], sortKey: string): KamisPriceData[] {
   const parsePrice = (val: string): number => {
-    const num = parseInt(val?.replace(/,/g, '') || '', 10);
-    return isNaN(num) ? Infinity : num; // '-' → Infinity로 처리해 맨 뒤로 보냄
-  };
+    const num = parseInt(val?.replace(/,/g, '') || '', 10)
+    return isNaN(num) ? Infinity : num // '-' → Infinity로 처리해 맨 뒤로 보냄
+  }
 
   const compareRate = (item: KamisPriceData) => {
-    const today = parsePrice(item.dpr1);
-    const yesterday = parsePrice(item.dpr2);
-    return yesterday ? ((today - yesterday) / yesterday) * 100 : 0;
-  };
+    const today = parsePrice(item.dpr1)
+    const yesterday = parsePrice(item.dpr2)
+    return yesterday ? ((today - yesterday) / yesterday) * 100 : 0
+  }
 
   const normalizeName = (name: string) =>
-    name.replace(/\([^)]*\)/g, '').replace(/\s+/g, '').toLowerCase();
+    name
+      .replace(/\([^)]*\)/g, '')
+      .replace(/\s+/g, '')
+      .toLowerCase()
 
   switch (sortKey) {
     case 'price_asc':
-      return [...data].sort((a, b) => parsePrice(a.dpr1) - parsePrice(b.dpr1));
+      return [...data].sort((a, b) => parsePrice(a.dpr1) - parsePrice(b.dpr1))
     case 'price_desc':
-      return [...data].sort((a, b) => parsePrice(b.dpr1) - parsePrice(a.dpr1));
+      return [...data].sort((a, b) => parsePrice(b.dpr1) - parsePrice(a.dpr1))
     case 'name_asc':
-      return [...data].sort(
-        (a, b) => normalizeName(a.item_name).localeCompare(normalizeName(b.item_name))
-      );
+      return [...data].sort((a, b) =>
+        normalizeName(a.item_name).localeCompare(normalizeName(b.item_name))
+      )
     case 'drop_desc':
-      return [...data].sort((a, b) => compareRate(a) - compareRate(b));
+      return [...data].sort((a, b) => compareRate(a) - compareRate(b))
     case 'rise_desc':
-      return [...data].sort((a, b) => compareRate(b) - compareRate(a));
+      return [...data].sort((a, b) => compareRate(b) - compareRate(a))
     default:
-      return data;
+      return data
   }
 }
