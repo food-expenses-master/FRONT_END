@@ -1,11 +1,14 @@
 'use client';
 
-import { KamisPriceData } from '@/data/types';
+import { KamisPriceData, regionOptions, sellerOptions } from '@/data/types';
 import { useState } from 'react';
 import CategorySelector from './CategorySelector';
 import SortSelector from './SortSelector';
 import { getDisplayName } from '@/data/utils';
 import BottomNav from './BottomNav';
+import FilterBottomSheet, { FilterOption } from './FilterBottomSheet';
+import FilterSelectTrigger from './FilterSelectTrigger';
+import SearchBar from './SearchBar';
 
 
 type Props = {
@@ -14,6 +17,15 @@ type Props = {
 
 export default function MainPageClient({ data }: Props) {
   const [sortKey, setSortKey] = useState('price_asc');
+  const [query, setQuery] = useState('');
+
+  const [showFilter, setShowFilter] = useState(false);
+
+  const [region, setRegion] = useState<string | null>(null);
+  const [seller, setSeller] = useState<string | null>(null);
+
+  const regionLabel = regionOptions.find((r) => r.id === region)?.label ?? '지역';
+  const sellerLabel = sellerOptions.find((s) => s.id === seller)?.label ?? '판매처';
 
   const sorted = sortData(
     data.filter((item) => item.rank !== '중품'),
@@ -22,8 +34,38 @@ export default function MainPageClient({ data }: Props) {
 
   return (
     <div className="bg-white">
-      <CategorySelector />
       <div className="w-full max-w-[425px] mx-auto px-4 overflow-y-scroll pb-[100px]">
+            <div className="flex items-end justify-between px-4 pt-6 pb-6">
+      <div className="flex items-baseline gap-2">
+        <h1 className="text-xl font-extrabold text-gray-900 leading-none">
+          {"재료 시세"}
+        </h1>
+        {/* <span className="text-sm text-gray-400 leading-none">{''} 기준</span> */}
+      </div>
+    </div>
+
+
+<SearchBar value={query} onChange={setQuery} />
+      <CategorySelector />
+
+<div className="flex gap-2 px-4 py-2 border-t">
+  <FilterSelectTrigger label={regionLabel} onClick={() => setShowFilter(true)} />
+  <FilterSelectTrigger label={sellerLabel} onClick={() => setShowFilter(true)} />
+</div>
+
+      {/* 바텀시트 필터 */}
+      <FilterBottomSheet
+        visible={showFilter}
+        onClose={() => setShowFilter(false)}
+        regionOptions={regionOptions}
+        sellerOptions={sellerOptions}
+        selectedRegion={region}
+        selectedSeller={seller}
+        setSelectedRegion={setRegion}
+        setSelectedSeller={setSeller}
+      />
+
+
         <div className="w-full max-w-[425px] mx-auto px-4 py-3 flex justify-between items-center text-sm">
           <div className="text-gray-400">
             전체 <span className="text-gray-600 font-medium">{sorted.length}</span>
@@ -32,6 +74,8 @@ export default function MainPageClient({ data }: Props) {
             <SortSelector onChange={setSortKey} />
           </div>
         </div>
+
+
 
         {sorted.map((item, idx) => {
           const displayPrice = item.dpr1 !== '-' ? item.dpr1 : item.dpr2 ?? '-';
