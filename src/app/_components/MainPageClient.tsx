@@ -52,6 +52,13 @@ export default function MainPageClient({ data }: Props) {
     }
   }
 
+  function isItemSelected(
+    selectedItems: { name: string }[],
+    itemName: string
+  ): boolean {
+    return selectedItems.some(sel => sel.name === itemName)
+  }
+
   return (
     <div className="pb-[100px]">
       <SearchBar data={data} onQueryChange={setQuery} />
@@ -128,10 +135,9 @@ export default function MainPageClient({ data }: Props) {
             <div className="flex items-center space-x-3">
               <input
                 type="checkbox"
-                className="w-4 h-4 accent-gray-400"
-                checked={selectedItems.some(
-                  sel =>
-                    sel.name === getDisplayName(item.item_name, item.kind_name)
+                checked={isItemSelected(
+                  selectedItems,
+                  getDisplayName(item.item_name, item.kind_name)
                 )}
                 onChange={() =>
                   toggleItem(
@@ -139,7 +145,54 @@ export default function MainPageClient({ data }: Props) {
                     displayPrice
                   )
                 }
+                className="hidden"
               />
+
+              {/* 커스텀 체크박스 UI */}
+              <div
+                onClick={() =>
+                  toggleItem(
+                    getDisplayName(item.item_name, item.kind_name),
+                    displayPrice
+                  )
+                }
+                className={`
+        w-5 h-5 flex items-center justify-center rounded-sm cursor-pointer
+        border-2
+        ${
+          isItemSelected(
+            selectedItems,
+            getDisplayName(item.item_name, item.kind_name)
+          )
+            ? 'bg-[#2F76FF] border-[#2F76FF]'
+            : 'bg-white border-[#D9DDEB]'
+        }
+      `}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-5 h-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={3}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M5 13l4 4L19 7"
+                    className={
+                      isItemSelected(
+                        selectedItems,
+                        getDisplayName(item.item_name, item.kind_name)
+                      )
+                        ? 'stroke-white'
+                        : 'stroke-[#D9DDEB]'
+                    }
+                  />
+                </svg>
+              </div>
+
               <div>
                 <div className="text-[15px] font-semibold text-gray-900">
                   {getDisplayName(item.item_name, item.kind_name)}
