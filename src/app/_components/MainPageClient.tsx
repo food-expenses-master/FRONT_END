@@ -39,6 +39,19 @@ export default function MainPageClient({ data }: Props) {
       .includes(query.trim().toLowerCase())
   )
 
+  const [selectedItems, setSelectedItems] = useState<
+    { name: string; price: string }[]
+  >([])
+
+  const toggleItem = (name: string, price: string) => {
+    const exists = selectedItems.some(item => item.name === name)
+    if (exists) {
+      setSelectedItems(prev => prev.filter(item => item.name !== name))
+    } else {
+      setSelectedItems(prev => [...prev, { name, price }])
+    }
+  }
+
   return (
     <div className="pb-[100px]">
       <SearchBar data={data} onQueryChange={setQuery} />
@@ -113,7 +126,20 @@ export default function MainPageClient({ data }: Props) {
             className="flex items-center justify-between py-4 px-2"
           >
             <div className="flex items-center space-x-3">
-              <input type="checkbox" className="w-4 h-4 accent-gray-400" />
+              <input
+                type="checkbox"
+                className="w-4 h-4 accent-gray-400"
+                checked={selectedItems.some(
+                  sel =>
+                    sel.name === getDisplayName(item.item_name, item.kind_name)
+                )}
+                onChange={() =>
+                  toggleItem(
+                    getDisplayName(item.item_name, item.kind_name),
+                    displayPrice
+                  )
+                }
+              />
               <div>
                 <div className="text-[15px] font-semibold text-gray-900">
                   {getDisplayName(item.item_name, item.kind_name)}
@@ -142,6 +168,11 @@ export default function MainPageClient({ data }: Props) {
           </div>
         )
       })}
+      {selectedItems.length > 0 && (
+        <div className="fixed bottom-0 left-0 right-0 z-40 bg-blue-600 text-white text-center py-4 font-semibold text-lg">
+          장보기 리스트에 담기 +
+        </div>
+      )}
     </div>
   )
 }
