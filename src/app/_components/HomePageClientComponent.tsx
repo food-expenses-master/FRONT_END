@@ -15,8 +15,6 @@ export default function HomePage() {
     }
   }, [user])
 
-  console.log(data)
-
   if (loading) return <div>로딩중.....</div>
 
   return (
