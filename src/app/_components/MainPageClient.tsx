@@ -10,6 +10,9 @@ import FilterSelectTrigger from './FilterSelectTrigger'
 import SearchBar from './SearchBar'
 import { useScrollInfo } from '@/hooks/useScrollInfo'
 
+// 장바구니 저장 키
+const STORAGE_KEY = 'shoppingList'
+
 type Props = {
   data: KamisPriceData[]
 }
@@ -20,9 +23,7 @@ export default function MainPageClient({ data }: Props) {
 
   const [sortKey, setSortKey] = useState('price_asc')
   const [query, setQuery] = useState('')
-
   const [showFilter, setShowFilter] = useState(false)
-
   const [region, setRegion] = useState<string | null>(null)
   const [seller, setSeller] = useState<string | null>(null)
 
@@ -59,6 +60,11 @@ export default function MainPageClient({ data }: Props) {
     return selectedItems.some(sel => sel.name === itemName)
   }
 
+  const handleAddToCart = () => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(selectedItems))
+    setSelectedItems([])
+  }
+
   return (
     <div className="pb-[100px]">
       <SearchBar data={data} onQueryChange={setQuery} />
@@ -77,7 +83,6 @@ export default function MainPageClient({ data }: Props) {
         />
       </div>
 
-      {/* 바텀시트 필터 */}
       <FilterBottomSheet
         visible={showFilter}
         onClose={() => setShowFilter(false)}
@@ -94,9 +99,7 @@ export default function MainPageClient({ data }: Props) {
           flex justify-between items-center
         sticky z-30 bg-white transition-[top] duration-200
       `}
-        style={{
-          top: isTabVisible ? 156 : 60, // 헤더:60 + 탭:40px 고려
-        }}
+        style={{ top: isTabVisible ? 156 : 60 }}
       >
         <div className="text-gray-400">
           전체{' '}
@@ -148,7 +151,6 @@ export default function MainPageClient({ data }: Props) {
                 className="hidden"
               />
 
-              {/* 커스텀 체크박스 UI */}
               <div
                 onClick={() =>
                   toggleItem(
@@ -221,8 +223,12 @@ export default function MainPageClient({ data }: Props) {
           </div>
         )
       })}
+
       {selectedItems.length > 0 && (
-        <div className="fixed bottom-0 left-0 right-0 z-40 bg-blue-600 text-white text-center py-4 font-semibold text-lg">
+        <div
+          onClick={handleAddToCart}
+          className="fixed bottom-0 left-0 right-0 z-40 bg-blue-600 text-white text-center py-4 font-semibold text-lg cursor-pointer"
+        >
           장보기 리스트에 담기 +
         </div>
       )}
@@ -239,7 +245,7 @@ function parsePrice(value: string): number | null {
 function sortData(data: KamisPriceData[], sortKey: string): KamisPriceData[] {
   const parsePrice = (val: string): number => {
     const num = parseInt(val?.replace(/,/g, '') || '', 10)
-    return isNaN(num) ? Infinity : num // '-' → Infinity로 처리해 맨 뒤로 보냄
+    return isNaN(num) ? Infinity : num
   }
 
   const compareRate = (item: KamisPriceData) => {
