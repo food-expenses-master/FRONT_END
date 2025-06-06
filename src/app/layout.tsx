@@ -13,7 +13,9 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 })
 
-const FOOD_EXPENSES_URL = new URL('food-expenses-master-4ffx.vercel.app')
+const FOOD_EXPENSES_URL = new URL(
+  'https://food-expenses-master-4ffx.vercel.app/'
+)
 const title = '식품마스투'
 const description = '사회초년생들을 위한 식품관리 앱'
 
