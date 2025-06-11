@@ -1,0 +1,22 @@
+{
+  "name": "Food Expenses Master",
+  "short_name": "FoodExp",
+  "description": "간편한 식비 관리 PWA 앱",
+  "start_url": "/data",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#317EFB",
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
