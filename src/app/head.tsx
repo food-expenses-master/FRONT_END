@@ -13,6 +13,3 @@ export default function Head() {
     </>
   )
 }
-
-//	•	public/icons/icon-192x192.png
-//	•	public/icons/icon-512x512.png

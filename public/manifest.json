@@ -1,22 +1,54 @@
 {
+  "id": "/",
   "name": "Food Expenses Master",
   "short_name": "FoodExp",
   "description": "간편한 식비 관리 PWA 앱",
-  "start_url": "/data",
+  "lang": "ko",
+  "dir": "ltr",
+  "scope": "/",
+  "start_url": "/data?source=pwa",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#ffffff",
   "theme_color": "#317EFB",
+  "categories": ["finance", "productivity"],
+  "iarc_rating_id": "INSERT_YOUR_IARC_ID_HERE",
+  "prefer_related_applications": false,
+  "related_applications": [
+    {
+      "platform": "play",
+      "id": "com.infludeo.foodexp",
+      "url": "https://play.google.com/store/apps/details?id=com.infludeo.foodexp"
+    }
+  ],
+  "scope_extensions": [],
+  "launch_handler": {
+    "client_mode": ["navigate-existing"]
+  },
+  "screenshots": [
+    {
+      "src": "/screenshots/1.png",
+      "sizes": "640x480",
+      "type": "image/png"
+    },
+    {
+      "src": "/screenshots/2.png",
+      "sizes": "640x480",
+      "type": "image/png"
+    }
+  ],
   "icons": [
     {
       "src": "/icons/icon-192x192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
       "src": "/icons/icon-512x512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
