@@ -1,7 +1,9 @@
 
-api
-https://www.data.go.kr/dataset/3043385/openapi.do
-https://kadx.co.kr/opmk/frn/pmumkproductDetail/PMU_79c6f1a4-56dd-492e-ad67-c5acba0304d2/5
+links
+
+https://kadx.co.kr/opmk/frn/pmumkproductDetail/PMU_79c6f1a4-56dd-492e-ad67-c5acba0304d2/5#!
+https://www.kamis.or.kr/customer/price/agricultureRetail/period.do
+https://www.pwabuilder.com/
 
 
 	lang: 앱 기본 언어 (예: "ko").
