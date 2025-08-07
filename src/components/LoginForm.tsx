@@ -1,57 +1,116 @@
 'use client'
 
 import { useState } from 'react'
-import { login } from '@/lib/auth'
-import { setSessionCookie } from '@/lib/setSession'
 import { useRouter } from 'next/navigation'
-import GoogleLoginButton from './GoogleLoginButton'
+import { login } from '@/lib/auth'
+// import { setSessionCookie } from '@/lib/setSession'
 
 export default function LoginForm() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
   const router = useRouter()
+  const [form, setForm] = useState({ nickname: '', password: '' })
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }))
+  }
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
+    setLoading(true)
+    setError('')
+
     try {
-      await login(email, password)
-      await setSessionCookie()
+      await login(form.nickname, form.password)
+      // await setSessionCookie()
       router.push('/') // 로그인 후 이동경로
     } catch (err: any) {
-      setError('로그인 실패: ' + err.message)
+      setError(err.message)
+    } finally {
+      setLoading(false)
     }
   }
 
   return (
-    <div className="flex">
-      <form onSubmit={handleLogin} className="space-y-4 p-4 max-w-sm mx-auto">
-        <h2 className="text-xl font-semibold">로그인</h2>
-        <input
-          type="email"
-          placeholder="이메일"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-          className="w-full border p-2 rounded"
-          required
-        />
-        <input
-          type="password"
-          placeholder="비밀번호"
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-          className="w-full border p-2 rounded"
-          required
-        />
-        {error && <p className="text-red-500 text-sm">{error}</p>}
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
-        >
-          로그인
-        </button>
-      </form>
-      <GoogleLoginButton />
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600 p-6">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 space-y-6">
+        <h2 className="text-3xl font-extrabold text-center text-gray-800">
+          LOGIN
+        </h2>
+
+        <form onSubmit={handleLogin} className="space-y-4">
+          {/* 닉네임 */}
+          <div>
+            <label
+              htmlFor="nickname"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Nickname
+            </label>
+            <input
+              id="nickname"
+              name="nickname"
+              type="text"
+              placeholder="Your nickname"
+              value={form.nickname}
+              onChange={handleChange}
+              required
+              className="mt-1 block w-full rounded-xl border-gray-300 shadow-sm 
+                         focus:border-indigo-500 focus:ring-indigo-500"
+            />
+          </div>
+
+          {/* 비밀번호 */}
+          <div>
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Password
+            </label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              placeholder="••••••••"
+              value={form.password}
+              onChange={handleChange}
+              required
+              className="mt-1 block w-full rounded-xl border-gray-300 shadow-sm 
+                         focus:border-indigo-500 focus:ring-indigo-500"
+            />
+          </div>
+
+          {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full flex justify-center py-3 px-4 border border-transparent
+                       text-sm font-medium rounded-xl text-white bg-indigo-600
+                       hover:bg-indigo-700 focus:outline-none focus:ring-2
+                       focus:ring-offset-2 focus:ring-indigo-500 transition"
+          >
+            {loading ? '로그인 중...' : 'Log In'}
+          </button>
+        </form>
+
+        <div className="flex items-center justify-center space-x-2">
+          <span className="h-px w-16 bg-gray-200"></span>
+          <span className="text-sm text-gray-500">OR</span>
+          <span className="h-px w-16 bg-gray-200"></span>
+        </div>
+
+        <p className="text-center text-sm text-gray-500">
+          아직 계정이 없으신가요?{' '}
+          <a
+            href="/signup"
+            className="font-medium text-indigo-600 hover:text-indigo-500"
+          >
+            회원가입
+          </a>
+        </p>
+      </div>
     </div>
   )
 }
