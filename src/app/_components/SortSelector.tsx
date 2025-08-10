@@ -1,48 +1,46 @@
-'use client';
+'use client'
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react'
 
 type SortSelectorProps = {
-  onChange: (value: string) => void;
-};
+  onChange: (value: string) => void
+}
 
 const sortOptions = [
+  { label: '가나다순', value: 'name_asc' },
   { label: '저가순', value: 'price_asc' },
   { label: '고가순', value: 'price_desc' },
-  { label: '가나다순', value: 'name_asc' },
   { label: '가격하락순', value: 'drop_desc' },
   { label: '가격상승순', value: 'rise_desc' },
-];
+]
 
 export default function SortSelector({ onChange }: SortSelectorProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedValue, setSelectedValue] = useState('price_asc');
-  const wrapperRef = useRef<HTMLDivElement>(null);
+  const [isOpen, setIsOpen] = useState(false)
+  const [selectedValue, setSelectedValue] = useState('name_asc')
+  const wrapperRef = useRef<HTMLDivElement>(null)
 
   const selectedLabel =
-    sortOptions.find((opt) => opt.value === selectedValue)?.label ?? '';
-
-  // 최초 기본값 전달
-  useEffect(() => {
-    onChange('price_asc');
-  }, [onChange]);
+    sortOptions.find(opt => opt.value === selectedValue)?.label ?? ''
 
   // 외부 클릭 시 메뉴 닫기
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
-        setIsOpen(false);
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(e.target as Node)
+      ) {
+        setIsOpen(false)
       }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   const handleSelect = (value: string) => {
-    setSelectedValue(value);
-    onChange(value);
-    setIsOpen(false);
-  };
+    setSelectedValue(value)
+    onChange(value)
+    setIsOpen(false)
+  }
 
   return (
     <div ref={wrapperRef} className="relative">
@@ -58,7 +56,7 @@ export default function SortSelector({ onChange }: SortSelectorProps) {
       {/* 드롭다운 메뉴 */}
       {isOpen && (
         <div className="absolute right-0 mt-1 w-32 bg-white shadow rounded text-sm z-10">
-          {sortOptions.map((option) => (
+          {sortOptions.map(option => (
             <button
               key={option.value}
               onClick={() => handleSelect(option.value)}
@@ -70,5 +68,5 @@ export default function SortSelector({ onChange }: SortSelectorProps) {
         </div>
       )}
     </div>
-  );
+  )
 }
