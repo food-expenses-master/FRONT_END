@@ -21,7 +21,7 @@ export default function MainPageClient({ data }: Props) {
   const { scrollY, direction } = useScrollInfo()
   const isTabVisible = scrollY > 150 && direction === 'up'
 
-  const [sortKey, setSortKey] = useState('price_asc')
+  const [sortKey, setSortKey] = useState('name_asc')
   const [query, setQuery] = useState('')
   const [showFilter, setShowFilter] = useState(false)
   const [region, setRegion] = useState<string | null>(null)
@@ -102,8 +102,7 @@ export default function MainPageClient({ data }: Props) {
         style={{ top: isTabVisible ? 156 : 60 }}
       >
         <div className="text-gray-400">
-          전체{' '}
-          <span className="text-gray-600 font-medium">{sorted.length}</span>
+          전체 <span className="font-medium">{sorted.length}</span>
         </div>
         <div className="flex items-center text-gray-800 font-medium space-x-1">
           <SortSelector onChange={setSortKey} />
@@ -183,14 +182,7 @@ export default function MainPageClient({ data }: Props) {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     d="M5 13l4 4L19 7"
-                    className={
-                      isItemSelected(
-                        selectedItems,
-                        getDisplayName(item.item_name, item.kind_name)
-                      )
-                        ? 'stroke-white'
-                        : 'stroke-[#D9DDEB]'
-                    }
+                    className={'stroke-white'}
                   />
                 </svg>
               </div>
@@ -217,7 +209,7 @@ export default function MainPageClient({ data }: Props) {
                     : 'text-gray-400'
                 }`}
               >
-                {rateText} {icon}
+                {isUp || isDown ? `${rateText} ${icon}` : '-'}
               </div>
             </div>
           </div>
@@ -227,7 +219,7 @@ export default function MainPageClient({ data }: Props) {
       {selectedItems.length > 0 && (
         <div
           onClick={handleAddToCart}
-          className="fixed bottom-0 left-0 right-0 z-40 bg-blue-600 text-white text-center py-4 font-semibold text-lg cursor-pointer"
+          className="fixed bottom-0 left-0 right-0 z-30 bg-blue-600 text-white text-center py-4 font-semibold text-lg cursor-pointer"
         >
           장보기 리스트에 담기 +
         </div>

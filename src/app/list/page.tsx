@@ -74,7 +74,7 @@ export default function ListPage() {
   return (
     <main>
       {/* 헤더 + 툴바 */}
-      <Header title="장리스트" />
+      <Header title="장보기 리스트" />
       <div className="flex justify-between px-4 pt-6 pb-2 bg-white z-40">
         <span className="text-gray-400">전체 {shoppingList.length}</span>
         <div className="text-sm space-x-2 cursor-pointer">
@@ -111,14 +111,7 @@ export default function ListPage() {
               viewBox="0 0 24 24"
               fill="none"
             >
-              <path
-                d="M5 13l4 4L19 7"
-                className={`${
-                  selected.size === shoppingList.length
-                    ? 'stroke-white'
-                    : 'stroke-[#D9DDEB]'
-                }`}
-              />
+              <path d="M5 13l4 4L19 7" className={'stroke-white'} />
             </svg>
           </div>
           전체 {selected.size === shoppingList.length ? '해제' : '선택'}
@@ -154,12 +147,7 @@ export default function ListPage() {
                     fill="none"
                     viewBox="0 0 24 24"
                   >
-                    <path
-                      d="M5 13l4 4L19 7"
-                      className={
-                        isChecked ? 'stroke-white' : 'stroke-[#D9DDEB]'
-                      }
-                    />
+                    <path d="M5 13l4 4L19 7" className={'stroke-white'} />
                   </svg>
                 </div>
                 <div>
