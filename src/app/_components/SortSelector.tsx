@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
+import Image from 'next/image'
 
 type SortSelectorProps = {
   onChange: (value: string) => void
@@ -50,7 +51,9 @@ export default function SortSelector({ onChange }: SortSelectorProps) {
         className="text-sm px-2 py-1 bg-transparent focus:outline-none flex items-center space-x-1"
       >
         <span className="text-gray-800 font-medium">{selectedLabel}</span>
-        <span className="text-gray-400 text-[16px] leading-none">≡</span>
+        <span className="text-gray-400 text-[16px] leading-none">
+          <Image src="/icons/sort-bar.svg" alt="icon" width={16} height={16} />
+        </span>
       </button>
 
       {/* 드롭다운 메뉴 */}
