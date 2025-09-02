@@ -2,12 +2,10 @@
 
 export default function Header({ title }: { title: string }) {
   const now = new Date()
-  const formattedTime = `${String(now.getMonth() + 1).padStart(
-    2,
-    '0'
-  )}.${String(now.getDate()).padStart(2, '0')}.${String(
+  const pad = (n: number) => String(n).padStart(2, '0')
+  const formattedTime = `${pad(now.getMonth() + 1)}.${pad(now.getDate())}.${pad(
     now.getHours()
-  ).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`
+  )}:${pad(now.getMinutes())}`
 
   return (
     <header className="fixed top-0 left-0 right-0 bg-white z-40 border-gray-200">

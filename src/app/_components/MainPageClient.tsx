@@ -67,7 +67,7 @@ export default function MainPageClient({ data }: Props) {
 
   return (
     <div className="pb-[100px]">
-      <SearchBar data={data} onQueryChange={setQuery} />
+      <SearchBar onQueryChange={setQuery} />
       <CategorySelector />
 
       <div className="flex gap-2 py-2 border-t border-[#F3F4F8]">
@@ -132,7 +132,7 @@ export default function MainPageClient({ data }: Props) {
 
           return (
             <div
-              key={idx}
+              key={`${item.item_code}-${item.kind_code}`}
               className="flex items-center justify-between py-4 px-2"
             >
               <div className="flex items-center space-x-3">

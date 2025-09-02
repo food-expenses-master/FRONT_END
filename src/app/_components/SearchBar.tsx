@@ -1,16 +1,13 @@
-// src/components/SearchBar.tsx
-
-import { div } from 'framer-motion/client'
 import { Search } from 'lucide-react'
 import Image from 'next/image'
 import { useState, useEffect } from 'react'
 
 interface SearchBarProps {
-  data: { item_name: string; kind_name: string }[]
+  // data: { item_name: string; kind_name: string }[]
   onQueryChange: (query: string) => void
 }
 
-export default function SearchBar({ data, onQueryChange }: SearchBarProps) {
+export default function SearchBar({ onQueryChange }: SearchBarProps) {
   const [query, setQuery] = useState('')
 
   useEffect(() => {
