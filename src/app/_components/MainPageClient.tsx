@@ -67,7 +67,7 @@ export default function MainPageClient({ data }: Props) {
 
   return (
     <div className="pb-[100px]">
-      <SearchBar data={data} onQueryChange={setQuery} />
+      <SearchBar onQueryChange={setQuery} />
       <CategorySelector />
 
       <div className="flex gap-2 py-2 border-t border-[#F3F4F8]">
@@ -109,55 +109,56 @@ export default function MainPageClient({ data }: Props) {
         </div>
       </div>
 
-      {sorted.map((item, idx) => {
-        const displayPrice = item.dpr1 !== '-' ? item.dpr1 : item.dpr2 ?? '-'
+      {sorted.length > 0 ? (
+        sorted.map((item, idx) => {
+          const displayPrice = item.dpr1 !== '-' ? item.dpr1 : item.dpr2 ?? '-'
 
-        const [recent, prev] = [item.dpr1, item.dpr2]
-          .map(parsePrice)
-          .filter((n): n is number => n !== null)
+          const [recent, prev] = [item.dpr1, item.dpr2]
+            .map(parsePrice)
+            .filter((n): n is number => n !== null)
 
-        const rate =
-          recent !== undefined && prev !== undefined && prev !== 0
-            ? ((recent - prev) / prev) * 100
-            : null
+          const rate =
+            recent !== undefined && prev !== undefined && prev !== 0
+              ? ((recent - prev) / prev) * 100
+              : null
 
-        const isUp = rate !== null && rate > 0
-        const isDown = rate !== null && rate < 0
-        const rateText =
-          rate !== null
-            ? `${isUp ? '+' : isDown ? '-' : ''}${Math.abs(rate).toFixed(2)}%`
-            : '-'
-        const icon = isUp ? '▲' : isDown ? '▼' : ''
+          const isUp = rate !== null && rate > 0
+          const isDown = rate !== null && rate < 0
+          const rateText =
+            rate !== null
+              ? `${isUp ? '+' : isDown ? '-' : ''}${Math.abs(rate).toFixed(2)}%`
+              : '-'
+          const icon = isUp ? '▲' : isDown ? '▼' : ''
 
-        return (
-          <div
-            key={idx}
-            className="flex items-center justify-between py-4 px-2"
-          >
-            <div className="flex items-center space-x-3">
-              <input
-                type="checkbox"
-                checked={isItemSelected(
-                  selectedItems,
-                  getDisplayName(item.item_name, item.kind_name)
-                )}
-                onChange={() =>
-                  toggleItem(
-                    getDisplayName(item.item_name, item.kind_name),
-                    displayPrice
-                  )
-                }
-                className="hidden"
-              />
+          return (
+            <div
+              key={`${item.item_code}-${item.kind_code}`}
+              className="flex items-center justify-between py-4 px-2"
+            >
+              <div className="flex items-center space-x-3">
+                <input
+                  type="checkbox"
+                  checked={isItemSelected(
+                    selectedItems,
+                    getDisplayName(item.item_name, item.kind_name)
+                  )}
+                  onChange={() =>
+                    toggleItem(
+                      getDisplayName(item.item_name, item.kind_name),
+                      displayPrice
+                    )
+                  }
+                  className="hidden"
+                />
 
-              <div
-                onClick={() =>
-                  toggleItem(
-                    getDisplayName(item.item_name, item.kind_name),
-                    displayPrice
-                  )
-                }
-                className={`
+                <div
+                  onClick={() =>
+                    toggleItem(
+                      getDisplayName(item.item_name, item.kind_name),
+                      displayPrice
+                    )
+                  }
+                  className={`
         w-5 h-5 flex items-center justify-center rounded-sm cursor-pointer
         border-2
         ${
@@ -169,52 +170,57 @@ export default function MainPageClient({ data }: Props) {
             : 'bg-white border-[#D9DDEB]'
         }
       `}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-5 h-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={3}
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M5 13l4 4L19 7"
-                    className={'stroke-white'}
-                  />
-                </svg>
-              </div>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="w-5 h-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={3}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M5 13l4 4L19 7"
+                      className={'stroke-white'}
+                    />
+                  </svg>
+                </div>
 
-              <div>
+                <div>
+                  <div className="text-[15px] font-semibold text-gray-900">
+                    {getDisplayName(item.item_name, item.kind_name)}
+                  </div>
+                  <div className="text-[13px] text-gray-400">
+                    유통업체 · 상품 · 1kg
+                  </div>
+                </div>
+              </div>
+              <div className="text-right">
                 <div className="text-[15px] font-semibold text-gray-900">
-                  {getDisplayName(item.item_name, item.kind_name)}
+                  {displayPrice}원
                 </div>
-                <div className="text-[13px] text-gray-400">
-                  유통업체 · 상품 · 1kg
+                <div
+                  className={`text-[13px] font-medium ${
+                    isUp
+                      ? 'text-red-500'
+                      : isDown
+                      ? 'text-blue-600'
+                      : 'text-gray-400'
+                  }`}
+                >
+                  {isUp || isDown ? `${rateText} ${icon}` : '-'}
                 </div>
               </div>
             </div>
-            <div className="text-right">
-              <div className="text-[15px] font-semibold text-gray-900">
-                {displayPrice}원
-              </div>
-              <div
-                className={`text-[13px] font-medium ${
-                  isUp
-                    ? 'text-red-500'
-                    : isDown
-                    ? 'text-blue-600'
-                    : 'text-gray-400'
-                }`}
-              >
-                {isUp || isDown ? `${rateText} ${icon}` : '-'}
-              </div>
-            </div>
-          </div>
-        )
-      })}
+          )
+        })
+      ) : (
+        <div className="py-20 text-center text-gray-400">
+          <div>데이터가 없습니다.</div>
+        </div>
+      )}
 
       {selectedItems.length > 0 && (
         <div

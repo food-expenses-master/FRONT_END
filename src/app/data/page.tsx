@@ -10,7 +10,7 @@ export default async function Page({ searchParams }: { searchParams: any }) {
   return (
     <>
       <Header title={'재료 시세'} />
-      <MainPageClient data={kamisData?.data?.item ?? []} />;
+      <MainPageClient data={kamisData?.data?.item ?? []} />
     </>
   )
 }
