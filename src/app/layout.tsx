@@ -1,16 +1,13 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
 import BottomNav from './_components/BottomNav'
+import localFont from 'next/font/local'
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-})
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
+const pretendard = localFont({
+  src: './fonts/PretendardVariable.woff2',
+  variable: '--font-pretendard',
+  weight: '100 900',
+  display: 'swap',
 })
 
 const FOOD_EXPENSES_URL = new URL(
@@ -46,9 +43,9 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    <html lang="ko">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} w-full max-w-[425px] mx-auto mt-[60px] py-6 px-4 antialiased bg-white text-black`}
+        className={`${pretendard.variable} w-full max-w-[425px] mx-auto mt-[60px] py-6 px-4 antialiased bg-white text-black`}
       >
         {children}
         <BottomNav />
