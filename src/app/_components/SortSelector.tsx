@@ -58,7 +58,7 @@ export default function SortSelector({ onChange }: SortSelectorProps) {
 
       {/* 드롭다운 메뉴 */}
       {isOpen && (
-        <div className="absolute right-0 mt-3 w-32 bg-white shadow-[0px_0px_4px_rgba(0,0,0,0.5)] rounded text-sm z-10 border-1 border-[#E4E8EF]">
+        <div className="absolute right-0 mt-3 w-32 bg-white shadow-[0px_0px_4px_rgba(0,0,0,0.5)] rounded text-sm z-10 border border-[#E4E8EF]">
           {sortOptions.map(option => (
             <button
               key={option.value}

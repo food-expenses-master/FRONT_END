@@ -161,7 +161,7 @@ export default function MainPageClient({ data }: Props) {
                   }
                   className={`
         w-5 h-5 flex items-center justify-center rounded-sm cursor-pointer
-        border-1
+        border
         ${
           isItemSelected(
             selectedItems,
