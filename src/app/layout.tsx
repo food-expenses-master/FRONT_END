@@ -45,7 +45,7 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body
-        className={`${pretendard.variable} w-full max-w-[425px] mx-auto mt-[60px] py-6 px-4 antialiased bg-white text-black`}
+        className={`${pretendard.variable} w-full max-w-[425px] mx-auto mt-12 px-4 antialiased bg-white text-black`}
       >
         {children}
         <BottomNav />

@@ -24,3 +24,12 @@ body {
   font-family: var(--font-pretendard), sans-serif;
   @apply bg-white text-black;
 }
+
+@layer utilities {
+  .scrollbar-hide {
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    scrollbar-width: none;
+  }
+}
