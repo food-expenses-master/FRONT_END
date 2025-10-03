@@ -9,6 +9,7 @@ import FilterBottomSheet from './FilterBottomSheet'
 import FilterSelectTrigger from './FilterSelectTrigger'
 import SearchBar from './SearchBar'
 import { useScrollInfo } from '@/hooks/useScrollInfo'
+import Image from 'next/image'
 
 // 장바구니 저장 키
 const STORAGE_KEY = 'shoppingList'
@@ -69,8 +70,8 @@ export default function MainPageClient({ data }: Props) {
     <div className="pb-[100px]">
       <SearchBar onQueryChange={setQuery} />
       <CategorySelector />
-
-      <div className="flex gap-2 py-2 border-t border-[#F3F4F8]">
+      <hr className="-mx-4 border-t border-[#F3F4F8]" />
+      <div className="flex gap-2 py-2">
         <FilterSelectTrigger
           label={regionLabel}
           active={regionLabel !== '지역'}
@@ -97,11 +98,11 @@ export default function MainPageClient({ data }: Props) {
       <div
         className={`
           flex justify-between items-center
-        sticky z-30 bg-white transition-[top] duration-200
+        sticky z-30 bg-white transition-[top] duration-200 py-2
       `}
-        style={{ top: isTabVisible ? 156 : 60 }}
+        style={{ top: isTabVisible ? 138 : 48 }}
       >
-        <div className="text-gray-400">
+        <div className="text-gray-400 text-[14px] font-normal">
           전체 <span className="font-medium">{sorted.length}</span>
         </div>
         <div className="flex items-center text-gray-800 font-medium space-x-1">
@@ -128,12 +129,12 @@ export default function MainPageClient({ data }: Props) {
             rate !== null
               ? `${isUp ? '+' : isDown ? '-' : ''}${Math.abs(rate).toFixed(2)}%`
               : '-'
-          const icon = isUp ? '▲' : isDown ? '▼' : ''
+          const icon = isUp ? 'up' : isDown ? 'down' : ''
 
           return (
             <div
               key={`${item.item_code}-${item.kind_code}`}
-              className="flex items-center justify-between py-4 px-2"
+              className="flex items-center justify-between py-4 border-b border-gray-100 last:border-0"
             >
               <div className="flex items-center space-x-3">
                 <input
@@ -160,7 +161,7 @@ export default function MainPageClient({ data }: Props) {
                   }
                   className={`
         w-5 h-5 flex items-center justify-center rounded-sm cursor-pointer
-        border-2
+        border
         ${
           isItemSelected(
             selectedItems,
@@ -189,7 +190,7 @@ export default function MainPageClient({ data }: Props) {
                 </div>
 
                 <div>
-                  <div className="text-[15px] font-semibold text-gray-900">
+                  <div className="text-base font-medium text-gray-900 mb-1">
                     {getDisplayName(item.item_name, item.kind_name)}
                   </div>
                   <div className="text-[13px] text-gray-400">
@@ -198,11 +199,11 @@ export default function MainPageClient({ data }: Props) {
                 </div>
               </div>
               <div className="text-right">
-                <div className="text-[15px] font-semibold text-gray-900">
+                <div className="text-base font-medium text-gray-900 mb-1">
                   {displayPrice}원
                 </div>
                 <div
-                  className={`text-[13px] font-medium ${
+                  className={`text-[13px] font-medium flex justify-end ${
                     isUp
                       ? 'text-red-500'
                       : isDown
@@ -210,15 +211,30 @@ export default function MainPageClient({ data }: Props) {
                       : 'text-gray-400'
                   }`}
                 >
-                  {isUp || isDown ? `${rateText} ${icon}` : '-'}
+                  {isUp || isDown ? (
+                    <>
+                      {rateText}
+                      <Image
+                        src={`/icons/${icon}.svg`}
+                        alt={icon}
+                        width={16}
+                        height={16}
+                      />
+                    </>
+                  ) : (
+                    '-'
+                  )}
                 </div>
               </div>
             </div>
           )
         })
       ) : (
-        <div className="py-20 text-center text-gray-400">
-          <div>데이터가 없습니다.</div>
+        <div className="py-20 text-center font-medium">
+          <div>검색 결과가 없어요</div>
+          <button className="bg-blue-600 text-white font-medium py-[7.5px] px-4 mt-4 rounded-xl">
+            전체 품목 보기
+          </button>
         </div>
       )}
 

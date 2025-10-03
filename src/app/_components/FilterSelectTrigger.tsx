@@ -14,7 +14,7 @@ export default function FilterSelectTrigger({
   return (
     <button
       onClick={onClick}
-      className={`flex items-center justify-between px-3 py-1.5 rounded-full border text-sm min-w-[88px] transition-all duration-200
+      className={`flex items-center justify-between px-[10px] py-1 rounded-full border text-sm min-w-[88px] transition-all duration-200
         ${
           active
             ? 'bg-white border-blue-500 text-blue-500'
