@@ -5,8 +5,10 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 
 const categories = [
+  { name: '전체', emoji: 'All', code: '000' },
   { name: '과일', emoji: 'Apple', code: '400' },
-  { name: '곡물·견과', emoji: 'Rice', code: '100' },
+  { name: '곡물·견과', emoji: 'Rice', code: '1100' },
+  { name: '수산물', emoji: 'Fish', code: '100' },
   { name: '고기·단백질', emoji: 'Meat', code: '500' },
   { name: '고추류', emoji: 'HotPepper', code: '600' },
   { name: '배추류', emoji: 'LeafyGreen', code: '700' },
