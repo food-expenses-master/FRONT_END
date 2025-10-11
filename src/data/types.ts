@@ -58,3 +58,9 @@ export const sellerOptions: FilterOption[] = [
   { id: 'online1', label: '쿠팡', disabled: true },
   { id: 'online2', label: '컬리', disabled: true },
 ]
+
+export const InfoDatas = [
+  '식재료 가격은 매일 정해진 시간에 업데이트돼요.',
+  '오늘 데이터가 없는 경우에는, 일주일 전 → 한 달 전 순서로 보여드려요.',
+  '각 식재료 리스트에 표시된 날짜는, 해당 데이터가 수집된 기준일이에요.',
+]

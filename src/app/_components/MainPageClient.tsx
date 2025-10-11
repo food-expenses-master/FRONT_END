@@ -39,9 +39,15 @@ export default function MainPageClient({ data }: Props) {
       .includes(query.trim().toLowerCase())
   )
 
+  const resetFilter = () => {
+    setRegion(null)
+    setSeller(null)
+    setQuery('')
+  }
+
   return (
     <div className="pb-[100px]">
-      <SearchBar onQueryChange={setQuery} />
+      <SearchBar query={query} onQueryChange={setQuery} />
       <CategorySelector />
       <hr className="-mx-4 border-t border-[#F3F4F8]" />
       <div className="flex gap-2 py-2">
@@ -106,7 +112,7 @@ export default function MainPageClient({ data }: Props) {
 
           return (
             <div
-              key={`${item.item_code}-${item.kind_code}`}
+              key={`idx-${idx}`}
               className="flex items-center justify-between py-5 border-b border-gray-100 last:border-0"
             >
               <div className="flex items-center space-x-3">
@@ -154,7 +160,10 @@ export default function MainPageClient({ data }: Props) {
       ) : (
         <div className="py-20 text-center font-medium">
           <div>검색 결과가 없어요</div>
-          <button className="bg-blue-600 text-white font-medium py-[7.5px] px-4 mt-4 rounded-xl">
+          <button
+            className="bg-blue-600 text-white font-medium py-[7.5px] px-4 mt-4 rounded-xl"
+            onClick={() => resetFilter()}
+          >
             전체 품목 보기
           </button>
         </div>
