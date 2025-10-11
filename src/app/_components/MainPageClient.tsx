@@ -1,7 +1,7 @@
 'use client'
 
 import { KamisPriceData, regionOptions, sellerOptions } from '@/data/types'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import CategorySelector from './CategorySelector'
 import SortSelector from './SortSelector'
 import { getDisplayName } from '@/data/utils'
@@ -11,6 +11,7 @@ import SearchBar from './SearchBar'
 import { useScrollInfo } from '@/hooks/useScrollInfo'
 import Image from 'next/image'
 import { ChevronRight } from 'lucide-react'
+import { foodList } from '../api/food'
 
 type Props = {
   data: KamisPriceData[]
@@ -44,6 +45,22 @@ export default function MainPageClient({ data }: Props) {
     setSeller(null)
     setQuery('')
   }
+
+  //api test
+  const [list, setList] = useState([])
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await foodList()
+        setList(res)
+      } catch (error) {
+        console.error('[api f Fetch Error]', error)
+        throw error
+      }
+    }
+
+    fetchData()
+  }, [])
 
   return (
     <div className="pb-[100px]">
