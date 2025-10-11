@@ -8,6 +8,7 @@ import { X } from 'lucide-react'
 export type FilterOption = {
   id: string
   label: string
+  disabled?: boolean
 }
 
 type FilterBottomSheetProps = {
@@ -154,15 +155,16 @@ export default function FilterBottomSheet({
                             ? 'bg-blue-50 text-blue-700 font-semibold'
                             : 'text-gray-800'
                         }`}
+                        disabled={option.disabled}
                       >
                         <div className="flex items-center gap-2">
                           <span
                             className={`w-5 h-5 rounded-full border flex items-center justify-center ${
                               selected ? 'border-blue-600' : 'border-gray-300'
-                            }`}
+                            } ${option.disabled && 'bg-gray-300'}`}
                           >
                             {selected && (
-                              <div className="w-2.5 h-2.5 bg-blue-600 rounded-full" />
+                              <div className="w-3 h-3 bg-blue-600 rounded-full" />
                             )}
                           </span>
                           {option.label}
@@ -170,6 +172,11 @@ export default function FilterBottomSheet({
                         {selected && (
                           <span className="text-blue-600 text-base font-bold">
                             ✓
+                          </span>
+                        )}
+                        {option.disabled && (
+                          <span className="text-[#959BA6] text-sm">
+                            Coming Soon!
                           </span>
                         )}
                       </button>

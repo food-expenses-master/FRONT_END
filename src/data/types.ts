@@ -1,28 +1,28 @@
-import { FilterOption } from "@/app/_components/FilterBottomSheet";
+import { FilterOption } from '@/app/_components/FilterBottomSheet'
 
 export type KamisPriceData = {
-  item_name: string;
-  item_code: string;
-  kind_name: string;
-  kind_code: string;
-  rank: string;
-  rank_code: string;
-  unit: string;
-  day1: string;
-  dpr1: string;
-  day2: string;
-  dpr2: string;
-  day3: string;
-  dpr3: string;
-  day4: string;
-  dpr4: string;
-  day5: string;
-  dpr5: string;
-  day6: string;
-  dpr6: string;
-  day7: string;
-  dpr7: string;
-};
+  item_name: string
+  item_code: string
+  kind_name: string
+  kind_code: string
+  rank: string
+  rank_code: string
+  unit: string
+  day1: string
+  dpr1: string
+  day2: string
+  dpr2: string
+  day3: string
+  dpr3: string
+  day4: string
+  dpr4: string
+  day5: string
+  dpr5: string
+  day6: string
+  dpr6: string
+  day7: string
+  dpr7: string
+}
 
 export const regionOptions: FilterOption[] = [
   { id: '1101', label: '서울' },
@@ -49,10 +49,12 @@ export const regionOptions: FilterOption[] = [
   { id: '3138', label: '고양' },
   { id: '3411', label: '천안' },
   { id: '3818', label: '김해' },
-];
+]
 
 export const sellerOptions: FilterOption[] = [
-  { id: 'mart', label: '대형마트' },
-  { id: 'traditional', label: '전통시장' },
-  { id: 'online', label: '온라인몰' },
-];
+  { id: 'wholesale', label: '도매' },
+  { id: 'retail', label: '소매' },
+  { id: 'traditional', label: '전통시장', disabled: true },
+  { id: 'online1', label: '쿠팡', disabled: true },
+  { id: 'online2', label: '컬리', disabled: true },
+]
