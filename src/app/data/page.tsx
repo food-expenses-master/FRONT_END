@@ -6,30 +6,28 @@ import { useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import InfoBottomSheet from '../_components/InfoBottomSheet'
 import { InfoDatas } from '@/data/types'
+import { foodList } from '../api/food'
 
 export default function Page() {
-  const params = useSearchParams()
-  const category = params.get('category') ?? '400'
-  const region = params.get('region') ?? ''
+  const searchParams = useSearchParams()
+  const category = searchParams.get('category') ?? ''
+  const region = searchParams.get('region') ?? ''
+  const salesType = searchParams.get('sales_type') ?? ''
   const [data, setData] = useState<any[]>([])
   const [showInfo, setShowInfo] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch(
-          `/api/kamis?category=${category}&region=${region}`
-        )
-        const kamisData = await res.json()
-        setData(kamisData?.data?.item ?? [])
+        const res = await foodList(category, region, salesType)
+        setData(res?.data ?? [])
       } catch (error) {
-        console.error('[Kamis Fetch Error]', error)
+        console.error('[Fetch Error]', error)
         throw error
       }
     }
-
     fetchData()
-  }, [category, region])
+  }, [category, region, salesType])
 
   return (
     <>

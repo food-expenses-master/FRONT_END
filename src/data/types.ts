@@ -25,6 +25,7 @@ export type KamisPriceData = {
 }
 
 export const regionOptions: FilterOption[] = [
+  { id: '0000', label: '전체' },
   { id: '1101', label: '서울' },
   { id: '2100', label: '부산' },
   { id: '2200', label: '대구' },
@@ -52,8 +53,9 @@ export const regionOptions: FilterOption[] = [
 ]
 
 export const sellerOptions: FilterOption[] = [
-  { id: 'wholesale', label: '도매' },
-  { id: 'retail', label: '소매' },
+  { id: '전체', label: '전체' },
+  { id: '도매', label: '도매' },
+  { id: '소매', label: '소매' },
   { id: 'traditional', label: '전통시장', disabled: true },
   { id: 'online1', label: '쿠팡', disabled: true },
   { id: 'online2', label: '컬리', disabled: true },
