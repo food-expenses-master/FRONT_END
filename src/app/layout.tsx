@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
-import BottomNav from './_components/BottomNav'
+// import BottomNav from './_components/BottomNav'
 import localFont from 'next/font/local'
 
 const pretendard = localFont({
@@ -48,7 +48,7 @@ export default function RootLayout({
         className={`${pretendard.variable} w-full max-w-[425px] mx-auto mt-12 px-4 antialiased bg-white text-black`}
       >
         {children}
-        <BottomNav />
+        {/* <BottomNav /> */}
       </body>
     </html>
   )
