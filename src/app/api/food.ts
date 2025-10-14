@@ -11,7 +11,7 @@ export const foodList = async (
     if (saleType) params.append('sales_type', saleType)
 
     const queryString = params.toString()
-    const url = `${process.env.NEXT_PUBLIC_API_URL}foods${
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/foods${
       queryString ? `?${queryString}` : ''
     }`
 
@@ -30,7 +30,7 @@ export const foodList = async (
 export const foodDetail = async (foodId: string) => {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}foods/${foodId}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/foods/${foodId}`,
       {
         method: 'GET',
         headers: {
