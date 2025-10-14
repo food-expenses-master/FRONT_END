@@ -1,6 +1,14 @@
 'use client'
 
-export default function Header({ title }: { title: string }) {
+import Image from 'next/image'
+
+interface HeaderProps {
+  title: string
+  iconSrc?: string
+  onClick?: () => void
+}
+
+export default function Header({ title, iconSrc, onClick }: HeaderProps) {
   const now = new Date()
   const pad = (n: number) => String(n).padStart(2, '0')
   const formattedTime = `${pad(now.getMonth() + 1)}.${pad(now.getDate())}.${pad(
@@ -13,12 +21,19 @@ export default function Header({ title }: { title: string }) {
         <h1 className="text-lg font-bold text-gray-900 leading-none">
           {title}
         </h1>
-        <time
-          className="text-[0.6875rem] text-[#959ba7] font-medium"
-          dateTime={now.toISOString()}
-        >
-          {formattedTime} 기준
-        </time>
+        <div className="flex items-center gap-1">
+          <time
+            className="text-[0.6875rem] text-[#959ba7] font-medium"
+            dateTime={now.toISOString()}
+          >
+            {formattedTime} 기준
+          </time>
+          {iconSrc && (
+            <button onClick={onClick}>
+              <Image src={iconSrc} alt="Info" width={12} height={12} />
+            </button>
+          )}
+        </div>
       </div>
     </header>
   )

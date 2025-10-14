@@ -1,30 +1,31 @@
-import { FilterOption } from "@/app/_components/FilterBottomSheet";
+import { FilterOption } from '@/app/_components/FilterBottomSheet'
 
 export type KamisPriceData = {
-  item_name: string;
-  item_code: string;
-  kind_name: string;
-  kind_code: string;
-  rank: string;
-  rank_code: string;
-  unit: string;
-  day1: string;
-  dpr1: string;
-  day2: string;
-  dpr2: string;
-  day3: string;
-  dpr3: string;
-  day4: string;
-  dpr4: string;
-  day5: string;
-  dpr5: string;
-  day6: string;
-  dpr6: string;
-  day7: string;
-  dpr7: string;
-};
+  item_name: string
+  item_code: string
+  kind_name: string
+  kind_code: string
+  rank: string
+  rank_code: string
+  unit: string
+  day1: string
+  dpr1: string
+  day2: string
+  dpr2: string
+  day3: string
+  dpr3: string
+  day4: string
+  dpr4: string
+  day5: string
+  dpr5: string
+  day6: string
+  dpr6: string
+  day7: string
+  dpr7: string
+}
 
 export const regionOptions: FilterOption[] = [
+  { id: '0000', label: '전체' },
   { id: '1101', label: '서울' },
   { id: '2100', label: '부산' },
   { id: '2200', label: '대구' },
@@ -49,10 +50,19 @@ export const regionOptions: FilterOption[] = [
   { id: '3138', label: '고양' },
   { id: '3411', label: '천안' },
   { id: '3818', label: '김해' },
-];
+]
 
 export const sellerOptions: FilterOption[] = [
-  { id: 'mart', label: '대형마트' },
-  { id: 'traditional', label: '전통시장' },
-  { id: 'online', label: '온라인몰' },
-];
+  { id: '전체', label: '전체' },
+  { id: '도매', label: '도매' },
+  { id: '소매', label: '소매' },
+  { id: 'traditional', label: '전통시장', disabled: true },
+  { id: 'online1', label: '쿠팡', disabled: true },
+  { id: 'online2', label: '컬리', disabled: true },
+]
+
+export const InfoDatas = [
+  '식재료 가격은 매일 정해진 시간에 업데이트돼요.',
+  '오늘 데이터가 없는 경우에는, 일주일 전 → 한 달 전 순서로 보여드려요.',
+  '각 식재료 리스트에 표시된 날짜는, 해당 데이터가 수집된 기준일이에요.',
+]

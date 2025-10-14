@@ -5,22 +5,24 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 
 const categories = [
-  { name: '과일', emoji: 'Apple', code: '400' },
-  { name: '곡물·견과', emoji: 'Rice', code: '100' },
-  { name: '고기·단백질', emoji: 'Meat', code: '500' },
-  { name: '고추류', emoji: 'HotPepper', code: '600' },
-  { name: '배추류', emoji: 'LeafyGreen', code: '700' },
-  { name: '채소류', emoji: 'Carrot', code: '200' },
-  { name: '버섯류', emoji: 'Mushroom', code: '800' },
-  { name: '식품', emoji: 'Food', code: '900' },
-  { name: '양념', emoji: 'Jar', code: '300' },
-  { name: '과채', emoji: 'Tomato', code: '1000' },
+  { name: '전체', emoji: 'All' },
+  { name: '과일', emoji: 'Apple' },
+  { name: '곡물·견과', emoji: 'Rice' },
+  { name: '수산물', emoji: 'Fish' },
+  { name: '고기·단백질', emoji: 'Meat' },
+  { name: '고추류', emoji: 'HotPepper' },
+  { name: '배추류', emoji: 'LeafyGreen' },
+  { name: '채소류', emoji: 'Carrot' },
+  { name: '버섯류', emoji: 'Mushroom' },
+  { name: '식품', emoji: 'Food' },
+  { name: '양념류', emoji: 'Jar' },
+  { name: '과채류', emoji: 'Tomato' },
 ]
 
 export default function CategorySelector() {
   const searchParams = useSearchParams()
   const router = useRouter()
-  const currentCategory = searchParams.get('category') ?? '400'
+  const currentCategory = searchParams.get('category') ?? ''
 
   const [isFixed, setIsFixed] = useState(false)
   const [show, setShow] = useState(true)
@@ -54,17 +56,20 @@ export default function CategorySelector() {
   }, [])
 
   const handleSelect = (code: string) => {
-    router.push(`?category=${code}`)
+    const url = code ? `?category=${code}` : window.location.pathname
+    router.push(url)
   }
 
   const renderCategoryButtons = () => (
     <div className="flex space-x-1.5 py-2 bg-white overflow-x-auto scrollbar-hide">
       {categories.map(cat => {
-        const isActive = cat.code === currentCategory
+        const isActive =
+          cat.name === currentCategory ||
+          (cat.name === '전체' && currentCategory === '')
         return (
           <button
-            key={cat.code}
-            onClick={() => handleSelect(cat.code)}
+            key={cat.name}
+            onClick={() => handleSelect(cat.name === '전체' ? '' : cat.name)}
             className="w-15 flex-shrink-0 flex flex-col items-center justify-center focus:outline-none cursor-pointer"
           >
             <div

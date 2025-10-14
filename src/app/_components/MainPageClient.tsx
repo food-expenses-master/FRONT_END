@@ -1,86 +1,89 @@
 'use client'
 
-import { KamisPriceData, regionOptions, sellerOptions } from '@/data/types'
-import { useState } from 'react'
+import { regionOptions, sellerOptions } from '@/data/types'
+import { useEffect, useState } from 'react'
 import CategorySelector from './CategorySelector'
 import SortSelector from './SortSelector'
-import { getDisplayName } from '@/data/utils'
 import FilterBottomSheet from './FilterBottomSheet'
 import FilterSelectTrigger from './FilterSelectTrigger'
 import SearchBar from './SearchBar'
 import { useScrollInfo } from '@/hooks/useScrollInfo'
 import Image from 'next/image'
+import { ChevronRight } from 'lucide-react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { foodList } from '../api/food'
 
-// 장바구니 저장 키
-const STORAGE_KEY = 'shoppingList'
-
-type Props = {
-  data: KamisPriceData[]
+type foodData = {
+  id: number
+  item_name: string
+  price: number
+  price_change_rate: string
+  rank: string
+  unit: string
+  day: string
+  category: string
+  sales_type: string
+  sales_region: string
 }
 
-export default function MainPageClient({ data }: Props) {
+export default function MainPageClient() {
   const { scrollY, direction } = useScrollInfo()
   const isTabVisible = scrollY > 150 && direction === 'up'
 
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const category = searchParams.get('category') ?? ''
+  const region = searchParams.get('region') ?? null
+  const salesType = searchParams.get('sales_type') ?? null
+
+  const [data, setData] = useState<foodData[]>([])
   const [sortKey, setSortKey] = useState('name_asc')
   const [query, setQuery] = useState('')
   const [showFilter, setShowFilter] = useState(false)
-  const [region, setRegion] = useState<string | null>(null)
-  const [seller, setSeller] = useState<string | null>(null)
+  const [selectedTab, setSelectedTab] = useState<'region' | 'seller'>('region')
 
-  const regionLabel = regionOptions.find(r => r.id === region)?.label ?? '지역'
-  const sellerLabel =
-    sellerOptions.find(s => s.id === seller)?.label ?? '판매처'
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await foodList(category, region, salesType)
+        setData(res?.data ?? [])
+      } catch (error) {
+        console.error('[Fetch Error]', error)
+        throw error
+      }
+    }
+    fetchData()
+  }, [category, region, salesType])
 
-  const sorted = sortData(
-    data.filter(item => item.rank !== '중품'),
-    sortKey
-  ).filter(item =>
-    `${item.item_name} ${item.kind_name}`
-      .toLowerCase()
-      .includes(query.trim().toLowerCase())
+  const sorted = sortData(data, sortKey).filter(item =>
+    `${item.item_name}`.toLowerCase().includes(query.trim().toLowerCase())
   )
 
-  const [selectedItems, setSelectedItems] = useState<
-    { name: string; price: string }[]
-  >([])
-
-  const toggleItem = (name: string, price: string) => {
-    const exists = selectedItems.some(item => item.name === name)
-    if (exists) {
-      setSelectedItems(prev => prev.filter(item => item.name !== name))
-    } else {
-      setSelectedItems(prev => [...prev, { name, price }])
-    }
+  const resetFilter = () => {
+    router.push(window.location.pathname)
+    setQuery('')
   }
 
-  function isItemSelected(
-    selectedItems: { name: string }[],
-    itemName: string
-  ): boolean {
-    return selectedItems.some(sel => sel.name === itemName)
-  }
-
-  const handleAddToCart = () => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(selectedItems))
-    setSelectedItems([])
+  const onClickTrigger = (type: 'region' | 'seller') => {
+    setSelectedTab(type)
+    setShowFilter(true)
   }
 
   return (
     <div className="pb-[100px]">
-      <SearchBar onQueryChange={setQuery} />
+      <SearchBar query={query} onQueryChange={setQuery} />
       <CategorySelector />
       <hr className="-mx-4 border-t border-[#F3F4F8]" />
       <div className="flex gap-2 py-2">
         <FilterSelectTrigger
-          label={regionLabel}
-          active={regionLabel !== '지역'}
-          onClick={() => setShowFilter(true)}
+          label={region ?? '지역'}
+          active={region !== null}
+          onClick={() => onClickTrigger('region')}
         />
         <FilterSelectTrigger
-          label={sellerLabel}
-          active={sellerLabel !== '판매처'}
-          onClick={() => setShowFilter(true)}
+          label={salesType ?? '판매처'}
+          active={salesType !== null}
+          onClick={() => onClickTrigger('seller')}
         />
       </div>
 
@@ -90,9 +93,9 @@ export default function MainPageClient({ data }: Props) {
         regionOptions={regionOptions}
         sellerOptions={sellerOptions}
         selectedRegion={region}
-        selectedSeller={seller}
-        setSelectedRegion={setRegion}
-        setSelectedSeller={setSeller}
+        selectedSeller={salesType}
+        selectedTab={selectedTab}
+        setSelectedTab={setSelectedTab}
       />
 
       <div
@@ -112,95 +115,29 @@ export default function MainPageClient({ data }: Props) {
 
       {sorted.length > 0 ? (
         sorted.map((item, idx) => {
-          const displayPrice = item.dpr1 !== '-' ? item.dpr1 : item.dpr2 ?? '-'
-
-          const [recent, prev] = [item.dpr1, item.dpr2]
-            .map(parsePrice)
-            .filter((n): n is number => n !== null)
-
-          const rate =
-            recent !== undefined && prev !== undefined && prev !== 0
-              ? ((recent - prev) / prev) * 100
-              : null
-
+          const rate = parseFloat(item.price_change_rate.replace('%', ''))
           const isUp = rate !== null && rate > 0
           const isDown = rate !== null && rate < 0
-          const rateText =
-            rate !== null
-              ? `${isUp ? '+' : isDown ? '-' : ''}${Math.abs(rate).toFixed(2)}%`
-              : '-'
           const icon = isUp ? 'up' : isDown ? 'down' : ''
 
           return (
             <div
-              key={`${item.item_code}-${item.kind_code}`}
-              className="flex items-center justify-between py-4 border-b border-gray-100 last:border-0"
+              key={`idx-${idx}`}
+              className="flex items-center justify-between py-5 border-b border-gray-100 last:border-0"
             >
-              <div className="flex items-center space-x-3">
-                <input
-                  type="checkbox"
-                  checked={isItemSelected(
-                    selectedItems,
-                    getDisplayName(item.item_name, item.kind_name)
-                  )}
-                  onChange={() =>
-                    toggleItem(
-                      getDisplayName(item.item_name, item.kind_name),
-                      displayPrice
-                    )
-                  }
-                  className="hidden"
-                />
-
-                <div
-                  onClick={() =>
-                    toggleItem(
-                      getDisplayName(item.item_name, item.kind_name),
-                      displayPrice
-                    )
-                  }
-                  className={`
-        w-5 h-5 flex items-center justify-center rounded-sm cursor-pointer
-        border
-        ${
-          isItemSelected(
-            selectedItems,
-            getDisplayName(item.item_name, item.kind_name)
-          )
-            ? 'bg-[#2F76FF] border-[#2F76FF]'
-            : 'bg-white border-[#D9DDEB]'
-        }
-      `}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="w-5 h-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={3}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M5 13l4 4L19 7"
-                      className={'stroke-white'}
-                    />
-                  </svg>
+              <div>
+                <div className="text-base font-medium text-gray-900 mb-1 flex items-center">
+                  {item.item_name}
+                  <ChevronRight size={18} className={'text-gray-400'} />
                 </div>
-
-                <div>
-                  <div className="text-base font-medium text-gray-900 mb-1">
-                    {getDisplayName(item.item_name, item.kind_name)}
-                  </div>
-                  <div className="text-[13px] text-gray-400">
-                    유통업체 · 상품 · 1kg
-                  </div>
+                <div className="text-[13px] text-gray-400">
+                  {item.sales_type} · {item.rank} · {item.unit} ·{' '}
+                  {item.day.replace(' · ', '')}
                 </div>
               </div>
               <div className="text-right">
                 <div className="text-base font-medium text-gray-900 mb-1">
-                  {displayPrice}원
+                  {item.price.toLocaleString()}원
                 </div>
                 <div
                   className={`text-[13px] font-medium flex justify-end ${
@@ -213,7 +150,7 @@ export default function MainPageClient({ data }: Props) {
                 >
                   {isUp || isDown ? (
                     <>
-                      {rateText}
+                      {item.price_change_rate}
                       <Image
                         src={`/icons/${icon}.svg`}
                         alt={icon}
@@ -232,40 +169,22 @@ export default function MainPageClient({ data }: Props) {
       ) : (
         <div className="py-20 text-center font-medium">
           <div>검색 결과가 없어요</div>
-          <button className="bg-blue-600 text-white font-medium py-[7.5px] px-4 mt-4 rounded-xl">
+          <button
+            className="bg-blue-600 text-white font-medium py-[7.5px] px-4 mt-4 rounded-xl"
+            onClick={() => resetFilter()}
+          >
             전체 품목 보기
           </button>
-        </div>
-      )}
-
-      {selectedItems.length > 0 && (
-        <div
-          onClick={handleAddToCart}
-          className="fixed bottom-0 left-0 right-0 z-30 bg-blue-600 text-white text-center py-4 font-semibold text-lg cursor-pointer"
-        >
-          장보기 리스트에 담기 +
         </div>
       )}
     </div>
   )
 }
 
-function parsePrice(value: string): number | null {
-  if (!value || value === '-' || isNaN(Number(value.replace(/,/g, ''))))
-    return null
-  return parseInt(value.replace(/,/g, ''), 10)
-}
-
-function sortData(data: KamisPriceData[], sortKey: string): KamisPriceData[] {
-  const parsePrice = (val: string): number => {
-    const num = parseInt(val?.replace(/,/g, '') || '', 10)
-    return isNaN(num) ? Infinity : num
-  }
-
-  const compareRate = (item: KamisPriceData) => {
-    const today = parsePrice(item.dpr1)
-    const yesterday = parsePrice(item.dpr2)
-    return yesterday ? ((today - yesterday) / yesterday) * 100 : 0
+function sortData(data: foodData[], sortKey: string): foodData[] {
+  const compareRate = (item: foodData) => {
+    const rate = parseFloat(item.price_change_rate.replace('%', ''))
+    return isNaN(rate) ? 0 : rate
   }
 
   const normalizeName = (name: string) =>
@@ -276,9 +195,9 @@ function sortData(data: KamisPriceData[], sortKey: string): KamisPriceData[] {
 
   switch (sortKey) {
     case 'price_asc':
-      return [...data].sort((a, b) => parsePrice(a.dpr1) - parsePrice(b.dpr1))
+      return [...data].sort((a, b) => a.price - b.price)
     case 'price_desc':
-      return [...data].sort((a, b) => parsePrice(b.dpr1) - parsePrice(a.dpr1))
+      return [...data].sort((a, b) => b.price - a.price)
     case 'name_asc':
       return [...data].sort((a, b) =>
         normalizeName(a.item_name).localeCompare(normalizeName(b.item_name))
