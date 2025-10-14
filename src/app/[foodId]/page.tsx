@@ -54,7 +54,7 @@ export default function FoodDetailPage({
     const fetchData = async () => {
       try {
         const res = await foodDetail(foodId)
-        setData(res?.data ?? [])
+        setData(res?.data ?? null)
       } catch (error) {
         console.error('[Fetch Error]', error)
       }
@@ -210,7 +210,7 @@ const PriceItem = ({
   priceChangeRate,
   info,
 }: PriceItemProps) => {
-  const rate = parseFloat(priceChangeRate.replace('%', ''))
+  const rate = parseFloat(priceChangeRate)
   const isUp = rate !== null && rate > 0
   const isDown = rate !== null && rate < 0
   const icon = isUp ? 'up' : isDown ? 'down' : ''

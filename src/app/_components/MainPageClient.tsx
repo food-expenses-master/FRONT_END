@@ -116,7 +116,7 @@ export default function MainPageClient() {
 
       {sorted.length > 0 ? (
         sorted.map(item => {
-          const rate = parseFloat(item.price_change_rate.replace('%', ''))
+          const rate = parseFloat(item.price_change_rate)
           const isUp = rate !== null && rate > 0
           const isDown = rate !== null && rate < 0
           const icon = isUp ? 'up' : isDown ? 'down' : ''
