@@ -1,7 +1,5 @@
 'use client'
 
-// import Header from './_components/Header'
-// import HomePageClientComponent from './_components/HomePageClientComponent'
 import { Suspense, useState } from 'react'
 import Header from './_components/Header'
 import MainPageClient from './_components/MainPageClient'
@@ -31,6 +29,7 @@ export default function HomePage() {
         onClose={() => setShowInfo(false)}
         InfoDatas={InfoDatas}
         title="가격 데이터 업데이트"
+        icon="check"
       />
     </main>
   )

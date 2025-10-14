@@ -56,8 +56,13 @@ export default function CategorySelector() {
   }, [])
 
   const handleSelect = (code: string) => {
-    const url = code ? `?category=${code}` : window.location.pathname
-    router.push(url)
+    const params = new URLSearchParams(window.location.search)
+    if (code) {
+      params.set('category', code)
+    } else {
+      params.delete('category')
+    }
+    router.push(`?${params.toString()}`)
   }
 
   const renderCategoryButtons = () => (

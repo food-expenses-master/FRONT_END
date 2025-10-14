@@ -22,6 +22,7 @@ export default function Page() {
         onClose={() => setShowInfo(false)}
         InfoDatas={InfoDatas}
         title="가격 데이터 업데이트"
+        icon="check"
       />
     </>
   )

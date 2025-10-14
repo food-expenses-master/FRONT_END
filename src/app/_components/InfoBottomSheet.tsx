@@ -8,8 +8,13 @@ import Image from 'next/image'
 type InfoBottomSheetProps = {
   visible: boolean
   onClose: () => void
-  InfoDatas: string[]
+  InfoDatas: InfoItem[]
   title: string
+  icon: string
+}
+type InfoItem = {
+  text: string
+  link?: string
 }
 
 export default function InfoBottomSheet({
@@ -17,6 +22,7 @@ export default function InfoBottomSheet({
   onClose,
   InfoDatas,
   title,
+  icon,
 }: InfoBottomSheetProps) {
   const wrapperRef = useRef<HTMLDivElement>(null)
 
@@ -32,6 +38,17 @@ export default function InfoBottomSheet({
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [onClose])
+
+  const handleClickItem = (
+    item: { text: string; link?: string | null },
+    type: 'call' | 'location'
+  ) => {
+    if (type === 'call') {
+      window.location.href = `tel:${item.text}`
+    } else if (type === 'location' && item.link) {
+      window.open(item.link, '_blank')
+    }
+  }
 
   return (
     <AnimatePresence>
@@ -65,18 +82,23 @@ export default function InfoBottomSheet({
 
               {/* Scrollable list */}
               <div className="flex-1 overflow-y-auto px-4 py-6">
-                {InfoDatas.map((data, idx) => (
+                {InfoDatas.map(item => (
                   <div
-                    key={idx}
-                    className="flex items-center gap-1.5 p-4 mb-2 rounded-lg bg-[#F2F6FB] font-normal text-sm"
+                    key={item.text}
+                    className={`flex items-center gap-1.5 p-4 mb-2 rounded-lg bg-[#F2F6FB] font-normal text-sm ${
+                      icon !== 'check' && 'cursor-pointer'
+                    }`}
+                    onClick={() =>
+                      handleClickItem(item, icon as 'call' | 'location')
+                    }
                   >
                     <Image
-                      src="/icons/check.svg"
+                      src={`/icons/${icon}.svg`}
                       alt="icon"
                       width={16}
                       height={16}
                     />
-                    {data}
+                    {item.text}
                   </div>
                 ))}
               </div>
