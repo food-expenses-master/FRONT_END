@@ -5,6 +5,18 @@ const withPWA = require('next-pwa')({
   disable: process.env.NODE_ENV === 'development',
 })
 
-module.exports = withPWA({
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   reactStrictMode: true,
-})
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: `${new URL(process.env.NEXT_PUBLIC_API_URL!).hostname}`,
+        pathname: '/**',
+      },
+    ],
+  },
+}
+
+module.exports = withPWA(nextConfig)

@@ -12,6 +12,7 @@ import Image from 'next/image'
 import { ChevronRight } from 'lucide-react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { foodList } from '../api/food'
+import Link from 'next/link'
 
 type foodData = {
   id: number
@@ -114,7 +115,7 @@ export default function MainPageClient() {
       </div>
 
       {sorted.length > 0 ? (
-        sorted.map((item, idx) => {
+        sorted.map(item => {
           const rate = parseFloat(item.price_change_rate.replace('%', ''))
           const isUp = rate !== null && rate > 0
           const isDown = rate !== null && rate < 0
@@ -122,14 +123,17 @@ export default function MainPageClient() {
 
           return (
             <div
-              key={`idx-${idx}`}
+              key={item.id}
               className="flex items-center justify-between py-5 border-b border-gray-100 last:border-0"
             >
               <div>
-                <div className="text-base font-medium text-gray-900 mb-1 flex items-center">
+                <Link
+                  href={`/${item.id}`}
+                  className="text-base font-medium text-gray-900 mb-1 flex items-center"
+                >
                   {item.item_name}
-                  <ChevronRight size={18} className={'text-gray-400'} />
-                </div>
+                  <ChevronRight size={18} className="text-gray-400" />
+                </Link>
                 <div className="text-[13px] text-gray-400">
                   {item.sales_type} · {item.rank} · {item.unit} ·{' '}
                   {item.day.replace(' · ', '')}

@@ -27,7 +27,7 @@ export const foodList = async (
   }
 }
 
-export const foodDetail = async (foodId: any) => {
+export const foodDetail = async (foodId: string) => {
   try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}foods/${foodId}`,
@@ -38,8 +38,6 @@ export const foodDetail = async (foodId: any) => {
         },
       }
     )
-
-    console.log(res)
     return await res.json()
   } catch (error) {
     console.error('[error]:', error)
