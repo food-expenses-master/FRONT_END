@@ -9,12 +9,14 @@ type InfoBottomSheetProps = {
   visible: boolean
   onClose: () => void
   InfoDatas: string[]
+  title: string
 }
 
 export default function InfoBottomSheet({
   visible,
   onClose,
   InfoDatas,
+  title,
 }: InfoBottomSheetProps) {
   const wrapperRef = useRef<HTMLDivElement>(null)
 
@@ -55,9 +57,7 @@ export default function InfoBottomSheet({
             >
               {/* Header */}
               <div className="p-4 pb-0 flex justify-between items-center">
-                <h2 className="text-lg font-semibold text-gray-900">
-                  가격 데이터 업데이트
-                </h2>
+                <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
                 <button onClick={onClose} className="text-gray-400">
                   <X size={20} />
                 </button>

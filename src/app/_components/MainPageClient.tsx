@@ -1,7 +1,7 @@
 'use client'
 
 import { regionOptions, sellerOptions } from '@/data/types'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import CategorySelector from './CategorySelector'
 import SortSelector from './SortSelector'
 import FilterBottomSheet from './FilterBottomSheet'
@@ -11,6 +11,7 @@ import { useScrollInfo } from '@/hooks/useScrollInfo'
 import Image from 'next/image'
 import { ChevronRight } from 'lucide-react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { foodList } from '../api/food'
 
 type foodData = {
   id: number
@@ -24,23 +25,35 @@ type foodData = {
   sales_type: string
   sales_region: string
 }
-type Props = {
-  data: foodData[]
-}
 
-export default function MainPageClient({ data }: Props) {
+export default function MainPageClient() {
   const { scrollY, direction } = useScrollInfo()
   const isTabVisible = scrollY > 150 && direction === 'up'
 
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const category = searchParams.get('category') ?? ''
+  const region = searchParams.get('region') ?? null
+  const salesType = searchParams.get('sales_type') ?? null
+
+  const [data, setData] = useState<foodData[]>([])
   const [sortKey, setSortKey] = useState('name_asc')
   const [query, setQuery] = useState('')
   const [showFilter, setShowFilter] = useState(false)
   const [selectedTab, setSelectedTab] = useState<'region' | 'seller'>('region')
 
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const region = searchParams.get('region') ?? null
-  const salesType = searchParams.get('sales_type') ?? null
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await foodList(category, region, salesType)
+        setData(res?.data ?? [])
+      } catch (error) {
+        console.error('[Fetch Error]', error)
+        throw error
+      }
+    }
+    fetchData()
+  }, [category, region, salesType])
 
   const sorted = sortData(data, sortKey).filter(item =>
     `${item.item_name}`.toLowerCase().includes(query.trim().toLowerCase())
@@ -112,16 +125,14 @@ export default function MainPageClient({ data }: Props) {
               key={`idx-${idx}`}
               className="flex items-center justify-between py-5 border-b border-gray-100 last:border-0"
             >
-              <div className="flex items-center space-x-3">
-                <div>
-                  <div className="text-base font-medium text-gray-900 mb-1 flex items-center">
-                    {item.item_name}
-                    <ChevronRight size={18} className={'text-gray-400'} />
-                  </div>
-                  <div className="text-[13px] text-gray-400">
-                    {item.sales_type} · {item.rank} · {item.unit} ·{' '}
-                    {item.day.replace(' · ', '')}
-                  </div>
+              <div>
+                <div className="text-base font-medium text-gray-900 mb-1 flex items-center">
+                  {item.item_name}
+                  <ChevronRight size={18} className={'text-gray-400'} />
+                </div>
+                <div className="text-[13px] text-gray-400">
+                  {item.sales_type} · {item.rank} · {item.unit} ·{' '}
+                  {item.day.replace(' · ', '')}
                 </div>
               </div>
               <div className="text-right">

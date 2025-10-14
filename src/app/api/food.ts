@@ -1,7 +1,7 @@
 export const foodList = async (
   category?: string,
-  region?: string,
-  saleType?: string
+  region?: string | null,
+  saleType?: string | null
 ) => {
   try {
     const params = new URLSearchParams()
