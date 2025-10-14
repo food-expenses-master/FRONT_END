@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import './globals.css'
-// import BottomNav from './_components/BottomNav'
 import localFont from 'next/font/local'
 
 const pretendard = localFont({
