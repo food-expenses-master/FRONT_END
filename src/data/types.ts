@@ -64,7 +64,7 @@ export const sellerOptions: FilterOption[] = [
 export const InfoDatas = [
   { text: '식재료 가격은 매일 정해진 시간에 업데이트돼요.' },
   {
-    text: '오늘 데이터가 없는 경우에는, 일주일 전 → 한 달 전 순서로 보여드려요.',
+    text: '오늘 데이터가 없을 경우, 가장 최근에 업데이트된 데이터를 보여드려요.',
   },
   {
     text: '각 식재료 리스트에 표시된 날짜는, 해당 데이터가 수집된 기준일이에요.',
