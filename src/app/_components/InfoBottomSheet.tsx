@@ -43,9 +43,7 @@ export default function InfoBottomSheet({
     item: { text: string; link?: string | null },
     type: 'call' | 'location'
   ) => {
-    if (type === 'call') {
-      window.location.href = `tel:${item.text}`
-    } else if (type === 'location' && item.link) {
+    if (type === 'location' && item.link) {
       window.open(item.link, '_blank')
     }
   }
@@ -86,7 +84,7 @@ export default function InfoBottomSheet({
                   <div
                     key={item.text}
                     className={`flex items-center gap-1.5 p-4 mb-2 rounded-lg bg-[#F2F6FB] font-normal text-sm ${
-                      icon !== 'check' && 'cursor-pointer'
+                      icon === 'location' && 'cursor-pointer'
                     }`}
                     onClick={() =>
                       handleClickItem(item, icon as 'call' | 'location')
