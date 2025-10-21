@@ -135,7 +135,7 @@ export default function MainPageClient() {
                   <ChevronRight size={18} className="text-gray-400" />
                 </Link>
                 <div className="text-[13px] text-gray-400">
-                  {item.sales_type} · {'kind_name'} · {item.unit} ·{' '}
+                  {item.sales_type} · {'-'} · {item.unit} ·{' '}
                   {item.day.replace(' · ', '')}
                 </div>
               </div>
