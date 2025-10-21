@@ -5,6 +5,7 @@ import InfoBottomSheet from '../_components/InfoBottomSheet'
 import { foodDetail } from '../api/food'
 import Image from 'next/image'
 import { ChevronLeft } from 'lucide-react'
+import { getFormattedTime } from '@/data/utils'
 
 type foodDetailData = {
   category: string
@@ -43,12 +44,6 @@ export default function FoodDetailPage({
   const [infoData, setInfoData] = useState<{ text: string; link?: string }[]>(
     []
   )
-
-  const now = new Date()
-  const pad = (n: number) => String(n).padStart(2, '0')
-  const formattedTime = `${pad(now.getMonth() + 1)}.${pad(
-    now.getDate()
-  )}. ${pad(now.getHours())}:${pad(now.getMinutes())}`
 
   useEffect(() => {
     const fetchData = async () => {
@@ -90,8 +85,10 @@ export default function FoodDetailPage({
         </div>
       </header>
       {data && (
-        <div className="-mx-4 bg-[#F2F6FB] px-4 pt-8 h-[calc(100vh-3rem)]">
-          <h1 className="text-xl font-bold mb-1">{data.item_name}</h1>
+        <div className="-mx-4 bg-[#F2F6FB] px-4 pt-8 min-h-[calc(100vh-3rem)]">
+          <h1 className="text-xl font-bold mb-1">
+            {data.item_name}({data.rank})
+          </h1>
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-lg font-bold">
               <span className="text-[#3271F9]">
@@ -100,100 +97,117 @@ export default function FoodDetailPage({
               이 제일 저렴해요!
             </h2>
             <p className="text-[0.6875rem] text-[#959ba7] font-medium">
-              {formattedTime} 기준
+              {getFormattedTime()} 기준
             </p>
           </div>
-          <PriceItem
-            sellerType="도매가격"
-            price={data.wholesale_price}
-            priceChangeRate={data.wholesale_price_change_rate}
-            info={`${data.rank} · ${data.unit} · ${data.wholesale_day.replace(
-              ' · ',
-              ''
-            )}`}
-          />
-          <PriceItem
-            sellerType="소매가격"
-            price={data.retail_price}
-            priceChangeRate={data.retail_price_change_rate}
-            info={`${data.rank} · ${data.unit} · ${data.retail_day.replace(
-              ' · ',
-              ''
-            )}`}
-          />
-          <PriceItem
-            sellerType="전통시장"
-            price={0}
-            priceChangeRate={''}
-            info={''}
-          />
+          <div className="space-y-2 pb-8">
+            <PriceItem
+              sellerType="도매가격"
+              price={data.wholesale_price}
+              priceChangeRate={data.wholesale_price_change_rate}
+              info={`${data.rank} · ${data.unit} · ${data.wholesale_day.replace(
+                ' · ',
+                ''
+              )}`}
+              iconSrc="wholesale"
+            />
+            <PriceItem
+              sellerType="소매가격"
+              price={data.retail_price}
+              priceChangeRate={data.retail_price_change_rate}
+              info={`${data.rank} · ${data.unit} · ${data.retail_day.replace(
+                ' · ',
+                ''
+              )}`}
+              iconSrc="retail"
+            />
+            {(['전통시장', '쿠팡', '컬리'] as const).map(seller => (
+              <PriceItem
+                key={seller}
+                sellerType={seller}
+                price={0}
+                priceChangeRate={''}
+                info={''}
+                iconSrc={
+                  {
+                    전통시장: 'traditional-market',
+                    컬리: 'kurly',
+                    쿠팡: 'coupang',
+                  }[seller]
+                }
+              />
+            ))}
+          </div>
 
           {/* recoommend store */}
           {data.recommended_store.length > 0 && (
-            <div className="-mx-4 mt-8 px-4 py-8 bg-white">
-              <h1 className="text-lg font-bold">
-                <span className="text-[#3271F9]">청량전통시장</span> 이 가게
-                어때요?
-              </h1>
-              <div className="mt-4 flex space-x-1.5  overflow-x-auto scrollbar-hide">
-                {data.recommended_store.map(item => (
-                  <div key={item.name} className="flex-shrink-0">
-                    <Image
-                      src={item.image}
-                      alt="store thumbnail"
-                      width={180}
-                      height={100}
-                      className="rounded-lg w-45 h-25"
-                    />
-                    <div className="mt-2 text-base font-medium text-gray-900">
-                      {item.name}
-                    </div>
-                    <div className="mt-0.5 text-[13px] font-normal text-[#69707A]">
-                      {item.business_info}
-                    </div>
-                    <div className="mt-5 flex items-center space-x-3">
-                      {(['call', 'location'] as const).map(icon => {
-                        const handleClick = () => {
-                          if (icon === 'call')
-                            handleInfoClick('call', item.number)
-                          else if (icon === 'location')
-                            handleInfoClick(
-                              'location',
-                              item.address,
-                              item.address_link
-                            )
-                        }
+            <>
+              <div className="-mx-4 px-4 py-8 bg-white">
+                <h1 className="text-lg font-bold">
+                  <span className="text-[#3271F9]">청량전통시장</span> 이 가게
+                  어때요?
+                </h1>
+                <div className="mt-4 flex space-x-1.5  overflow-x-auto scrollbar-hide">
+                  {data.recommended_store.map(item => (
+                    <div key={item.name} className="flex-shrink-0">
+                      <Image
+                        src={item.image || '/icons/store-default.svg'}
+                        alt="store thumbnail"
+                        width={180}
+                        height={100}
+                        className="rounded-lg w-45 h-25"
+                      />
+                      <div className="mt-2 text-base font-medium text-gray-900">
+                        {item.name}
+                      </div>
+                      <div className="mt-0.5 text-[13px] font-normal text-[#69707A]">
+                        {item.business_info}
+                      </div>
+                      <div className="mt-5 flex items-center space-x-3">
+                        {(['call', 'location'] as const).map(icon => {
+                          const handleClick = () => {
+                            if (icon === 'call')
+                              handleInfoClick('call', item.number)
+                            else if (icon === 'location')
+                              handleInfoClick(
+                                'location',
+                                item.address,
+                                item.address_link
+                              )
+                          }
 
-                        return (
-                          <div
-                            key={icon}
-                            className="p-2 bg-[#F2F6FB] rounded-full cursor-pointer"
-                            onClick={handleClick}
-                          >
-                            <Image
-                              src={`/icons/${icon}.svg`}
-                              alt={icon}
-                              width={16}
-                              height={16}
-                            />
-                          </div>
-                        )
-                      })}
+                          return (
+                            <div
+                              key={icon}
+                              className="p-2 bg-[#F2F6FB] rounded-full cursor-pointer"
+                              onClick={handleClick}
+                            >
+                              <Image
+                                src={`/icons/${icon}.svg`}
+                                alt={icon}
+                                width={16}
+                                height={16}
+                                className="w-4 h-4"
+                              />
+                            </div>
+                          )
+                        })}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
+              <InfoBottomSheet
+                visible={showInfo}
+                onClose={() => setShowInfo(false)}
+                InfoDatas={infoData}
+                title={infoTitle}
+                icon={infoIcon}
+              />
+            </>
           )}
         </div>
       )}
-      <InfoBottomSheet
-        visible={showInfo}
-        onClose={() => setShowInfo(false)}
-        InfoDatas={infoData}
-        title={infoTitle}
-        icon={infoIcon}
-      />
     </>
   )
 }
@@ -203,12 +217,14 @@ type PriceItemProps = {
   price: number
   priceChangeRate: string
   info: string
+  iconSrc: string
 }
 const PriceItem = ({
   sellerType,
   price,
   priceChangeRate,
   info,
+  iconSrc,
 }: PriceItemProps) => {
   const rate = parseFloat(priceChangeRate)
   const isUp = rate !== null && rate > 0
@@ -216,23 +232,24 @@ const PriceItem = ({
   const icon = isUp ? 'up' : isDown ? 'down' : ''
 
   return (
-    <div className="flex items-center justify-between p-5 bg-white rounded-xl mb-2 last:mb-0">
+    <div className="flex items-center justify-between p-5 bg-white rounded-xl">
       <div className="flex items-center space-x-3">
         <Image
-          src={`/icons/Store${sellerType === '소매가격' ? 2 : ''}.svg`}
+          src={`/icons/${iconSrc}.svg`}
           alt="storeicon"
-          width={29}
-          height={32.8}
+          width={32}
+          height={32}
+          className="w-8 h-8"
         />
-        <div>
-          <div className="text-base font-medium text-gray-900 mb-1 flex items-center">
+        <div className={`${info ? 'space-y-1' : ''}`}>
+          <div className="text-base font-medium text-gray-900 flex items-center">
             {sellerType}
           </div>
           <div className="text-[13px] text-gray-400">{info}</div>
         </div>
       </div>
       <div className="text-right">
-        {sellerType === '전통시장' ? (
+        {sellerType !== '도매가격' && sellerType !== '소매가격' ? (
           <span className="text-[#959BA6] font-normal text-[13px]">
             Coming Soon!
           </span>
@@ -262,6 +279,7 @@ const PriceItem = ({
                     alt={icon}
                     width={16}
                     height={16}
+                    className="w-4 h-4"
                   />
                 </>
               ) : (

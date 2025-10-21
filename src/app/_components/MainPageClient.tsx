@@ -131,11 +131,11 @@ export default function MainPageClient() {
                   href={`/${item.id}`}
                   className="text-base font-medium text-gray-900 mb-1 flex items-center"
                 >
-                  {item.item_name}
+                  {item.item_name}({item.rank})
                   <ChevronRight size={18} className="text-gray-400" />
                 </Link>
                 <div className="text-[13px] text-gray-400">
-                  {item.sales_type} · {item.rank} · {item.unit} ·{' '}
+                  {item.sales_type} · {'-'} · {item.unit} ·{' '}
                   {item.day.replace(' · ', '')}
                 </div>
               </div>
@@ -160,6 +160,7 @@ export default function MainPageClient() {
                         alt={icon}
                         width={16}
                         height={16}
+                        className="w-4 h-4"
                       />
                     </>
                   ) : (
