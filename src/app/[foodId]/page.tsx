@@ -20,6 +20,7 @@ type foodDetailData = {
   wholesale_price: number
   wholesale_price_change_rate: string
   recommended_store: recommentedStore[]
+  kind_name: string
 }
 
 type recommentedStore = {
@@ -105,20 +106,18 @@ export default function FoodDetailPage({
               sellerType="도매가격"
               price={data.wholesale_price}
               priceChangeRate={data.wholesale_price_change_rate}
-              info={`${data.rank} · ${data.unit} · ${data.wholesale_day.replace(
-                ' · ',
-                ''
-              )}`}
+              info={`${data.rank} · ${
+                data.kind_name
+              } · ${data.wholesale_day.replace(' · ', '')}`}
               iconSrc="wholesale"
             />
             <PriceItem
               sellerType="소매가격"
               price={data.retail_price}
               priceChangeRate={data.retail_price_change_rate}
-              info={`${data.rank} · ${data.unit} · ${data.retail_day.replace(
-                ' · ',
-                ''
-              )}`}
+              info={`${data.rank} · ${
+                data.kind_name
+              } · ${data.retail_day.replace(' · ', '')}`}
               iconSrc="retail"
             />
             {(['전통시장', '쿠팡', '컬리'] as const).map(seller => (
@@ -149,7 +148,7 @@ export default function FoodDetailPage({
                 </h1>
                 <div className="mt-4 flex space-x-1.5  overflow-x-auto scrollbar-hide">
                   {data.recommended_store.map(item => (
-                    <div key={item.name} className="flex-shrink-0">
+                    <div key={item.name} className="shrink-0">
                       <Image
                         src={item.image || '/icons/store-default.svg'}
                         alt="store thumbnail"
@@ -234,13 +233,7 @@ const PriceItem = ({
   return (
     <div className="flex items-center justify-between p-5 bg-white rounded-xl">
       <div className="flex items-center space-x-3">
-        <Image
-          src={`/icons/${iconSrc}.svg`}
-          alt="storeicon"
-          width={32}
-          height={32}
-          className="w-8 h-8"
-        />
+        <object data={`/icons/${iconSrc}.svg`} width={32} height={32} />
         <div className={`${info ? 'space-y-1' : ''}`}>
           <div className="text-base font-medium text-gray-900 flex items-center">
             {sellerType}

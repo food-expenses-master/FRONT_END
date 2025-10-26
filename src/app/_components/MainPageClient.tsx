@@ -25,6 +25,7 @@ type foodData = {
   category: string
   sales_type: string
   sales_region: string
+  kind_name: string
 }
 
 export default function MainPageClient() {
@@ -75,7 +76,12 @@ export default function MainPageClient() {
       <SearchBar query={query} onQueryChange={setQuery} />
       <CategorySelector />
       <hr className="-mx-4 border-t border-[#F3F4F8]" />
-      <div className="flex gap-2 py-2">
+      <div
+        className={`flex gap-2 py-2"
+        sticky z-30 bg-white transition-[top] duration-200 py-2
+      `}
+        style={{ top: isTabVisible ? 138 : 48 }}
+      >
         <FilterSelectTrigger
           label={region ?? '지역'}
           active={region !== null}
@@ -104,7 +110,7 @@ export default function MainPageClient() {
           flex justify-between items-center
         sticky z-30 bg-white transition-[top] duration-200 py-2
       `}
-        style={{ top: isTabVisible ? 138 : 48 }}
+        style={{ top: isTabVisible ? 183 : 93 }}
       >
         <div className="text-gray-400 text-[14px] font-normal">
           전체 <span className="font-medium">{sorted.length}</span>
@@ -135,7 +141,7 @@ export default function MainPageClient() {
                   <ChevronRight size={18} className="text-gray-400" />
                 </Link>
                 <div className="text-[13px] text-gray-400">
-                  {item.sales_type} · {'-'} · {item.unit} ·{' '}
+                  {item.sales_type} · {item.kind_name} ·{' '}
                   {item.day.replace(' · ', '')}
                 </div>
               </div>

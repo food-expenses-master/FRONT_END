@@ -126,7 +126,7 @@ export default function FilterBottomSheet({
                   }`}
                   onClick={() => setSelectedTab('region')}
                 >
-                  지역 {tempRegion ? '1' : ''}
+                  지역
                 </button>
                 <button
                   className={`flex-1 rounded-full py-2 text-sm border ${
@@ -136,7 +136,7 @@ export default function FilterBottomSheet({
                   }`}
                   onClick={() => setSelectedTab('seller')}
                 >
-                  판매처 {tempSeller ? '1' : ''}
+                  판매처
                 </button>
               </div>
 
