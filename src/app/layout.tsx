@@ -22,6 +22,9 @@ export const metadata: Metadata = {
   keywords: ' ',
   formatDetection: { telephone: false },
   manifest: '/manifest.json',
+  icons: {
+    icon: '/icons/logo-192x192.png',
+  },
   openGraph: {
     type: 'website',
     url: FOOD_EXPENSES_URL,
@@ -30,7 +33,7 @@ export const metadata: Metadata = {
     siteName: 'FoodExpenses',
     images: [
       {
-        url: '',
+        url: '/icons/logo-192x192.png',
       },
     ],
   },
