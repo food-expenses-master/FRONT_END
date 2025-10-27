@@ -1,6 +1,5 @@
 'use client'
 
-import Image from 'next/image'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 
@@ -75,7 +74,7 @@ export default function CategorySelector() {
           <button
             key={cat.name}
             onClick={() => handleSelect(cat.name === '전체' ? '' : cat.name)}
-            className="w-15 flex-shrink-0 flex flex-col items-center justify-center focus:outline-none cursor-pointer"
+            className="w-15 shrink-0 flex flex-col items-center justify-center focus:outline-none cursor-pointer"
           >
             <div
               className={`w-12 h-12 rounded-full flex items-center justify-center text-2xl ${
@@ -84,11 +83,13 @@ export default function CategorySelector() {
                   : 'bg-gray-100'
               }`}
             >
-              <Image
-                src={`/icons/categories/${cat.emoji}.svg`}
-                alt={cat.name}
-                width={27.43}
-                height={27.43}
+              <object
+                data={`/icons/categories/${cat.emoji}.svg`}
+                width={27}
+                height={27}
+                style={{ pointerEvents: 'none' }}
+                role="img"
+                aria-label={cat.name}
               />
             </div>
             <span
@@ -114,7 +115,7 @@ export default function CategorySelector() {
       {/* fixed */}
       {isFixed && (
         <div
-          className={`fixed top-[48px] z-30 w-full max-w-[425px] mx-auto transition-transform duration-300 ease-in-out ${
+          className={`fixed top-12 z-30 w-full max-w-[393px] mx-auto transition-transform duration-300 ease-in-out ${
             show ? 'translate-y-0' : '-translate-y-full'
           }`}
         >
