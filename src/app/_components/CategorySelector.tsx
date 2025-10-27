@@ -88,6 +88,8 @@ export default function CategorySelector() {
                 width={27}
                 height={27}
                 style={{ pointerEvents: 'none' }}
+                role="img"
+                aria-label={cat.name}
               />
             </div>
             <span

@@ -233,7 +233,13 @@ const PriceItem = ({
   return (
     <div className="flex items-center justify-between p-5 bg-white rounded-xl">
       <div className="flex items-center space-x-3">
-        <object data={`/icons/${iconSrc}.svg`} width={32} height={32} />
+        <object
+          data={`/icons/${iconSrc}.svg`}
+          width={32}
+          height={32}
+          role="img"
+          aria-label="상점 아이콘"
+        />
         <div className={`${info ? 'space-y-1' : ''}`}>
           <div className="text-base font-medium text-gray-900 flex items-center">
             {sellerType}

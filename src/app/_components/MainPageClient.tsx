@@ -77,8 +77,7 @@ export default function MainPageClient() {
       <CategorySelector />
       <hr className="-mx-4 border-t border-[#F3F4F8]" />
       <div
-        className={`flex gap-2 py-2"
-        sticky z-30 bg-white transition-[top] duration-200 py-2
+        className={`flex gap-2 py-2 sticky z-30 bg-white transition-[top] duration-200
       `}
         style={{ top: isTabVisible ? 138 : 48 }}
       >
